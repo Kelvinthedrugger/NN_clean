@@ -10,7 +10,7 @@ if __name__ == "__main__":
     y = ytrain[:100]
     layer1 = nn.Tensor(784, 128)
     layer2 = nn.Tensor(128, 10)
-    model = nn.Model([layer1, nn.Activation.ReLU, layer2])
+    model = nn.Model([layer1, nn.Activation.Sigmoid, layer2])
     lossfn = nn.Loss.crossentropy
     optimizer = nn.Optimizer.Adam
     model.compile(lossfn, optimizer)

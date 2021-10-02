@@ -28,7 +28,7 @@ class Activation:
 
     def Sigmoid(self, xx):
         # slow, hasn't checked
-        S = np.array(map(lambda x: 1/(1+np.exp(-x) for x in xx)))
+        S = np.array(list(map(lambda x: 1/(1+np.exp(-x)), xx)))
         return S, np.multiply(S, (1-S))
 
 
