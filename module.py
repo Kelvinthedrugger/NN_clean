@@ -26,13 +26,14 @@ class Activation:
         grad = (fp > 0).astype(np.float32)
         return fp, grad
 
-    def Sigmoid(self, xx):
-        # slow, hasn't checked
+    def Sigmoid(self, xx):  # slow
         S = np.array(list(map(lambda x: 1/(1+np.exp(-x)), xx)))
         return S, np.multiply(S, (1-S))
 
 
 class Model:
+    """implement training on batch"""
+
     def __init__(self, layers):
         self.model = layers
 
