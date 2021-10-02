@@ -18,8 +18,13 @@ class Tensor:
 
 
 class Activation:
-    def ReLU(self):
-        self.weight = np.maximum(self.weight, 0)
+    def __init__(self):
+        self.grad = None
+
+    def ReLU(self, x):
+        fp = np.maximum(x, 0)
+        grad = (fp > 0).astype(np.float32)
+        return fp, grad
 
     def Sigmoid(self, xx):
         # slow, hasn't checked
@@ -29,20 +34,26 @@ class Activation:
 
 class Model:
     def __init__(self, layers):
-        # add const time checker to implement Activation
         self.model = layers
 
     def forward(self, x):
         for layer in self.model:
-            layer.forward = x
-            x = x @ layer.weight
+            if not isinstance(layer, Tensor):
+                x, grad = layer(self, x)
+                layer.grad = grad
+            else:
+                layer.forward = x
+                x = x @ layer.weight
         return x
 
     def backward(self, bpass):
         for layer in self.model[::-1]:
-            layer.grad = layer.forward.T @ bpass
-            bpass = bpass @ (layer.weight.T)
-            self.optim(self, layer)
+            if not isinstance(layer, Tensor):
+                bpass = np.multiply(bpass, layer.grad)
+            else:
+                layer.grad = layer.forward.T @ bpass
+                bpass = bpass @ (layer.weight.T)
+                self.optim(self, layer)
 
     def compile(self, lossfn, optim):
         self.lossfn = lossfn
