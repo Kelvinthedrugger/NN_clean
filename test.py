@@ -8,8 +8,10 @@ if __name__ == "__main__":
     xtrain, ytrain, _, _ = mnist()
     x = xtrain[:100].reshape(-1, 28*28)
     y = ytrain[:100]
-    layer1 = nn.layer_init(784, 128)
-    layer2 = nn.layer_init(128, 10)
+    # layer1 = nn.layer_init(784, 128)
+    # layer2 = nn.layer_init(128, 10)
+    layer1 = nn.Tensor(784, 128)
+    layer2 = nn.Tensor(128, 10)
     model = nn.Model([layer1, layer2])
     lossfn = nn.Loss.crossentropy
     optimizer = nn.Optimizer.Adam
