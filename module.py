@@ -16,6 +16,8 @@ class Tensor:
         self.forward = None  # to save forward pass from previous layer
         self.grad = None  # d_layer
 
+
+class Activation:
     def ReLU(self):
         self.weight = np.maximum(self.weight, 0)
 
