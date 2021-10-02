@@ -11,10 +11,8 @@ def layer_init(row, col):
 
 
 class Tensor:
-    # def __init__(self, weight):
     def __init__(self, h, w):
-        # self.weight = weight  # layer
-        self.weight = layer_init(h, w)
+        self.weight = layer_init(h, w)  # layer
         self.forward = None  # to save forward pass from previous layer
         self.grad = None  # d_layer
 
@@ -29,12 +27,8 @@ class Tensor:
 
 class Model:
     def __init__(self, layers):
+        # add const time checker to implement Activation
         self.model = layers
-        # model = []
-        # for layer in layers:
-        #     # add const time checker to implement Activation
-        #     model.append(Tensor(layer))
-        # self.model = model
 
     def forward(self, x):
         for layer in self.model:
