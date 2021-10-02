@@ -53,7 +53,7 @@ class Model:
             else:
                 layer.grad = layer.forward.T @ bpass
                 bpass = bpass @ (layer.weight.T)
-                self.optim(self, layer)
+                self.optim(layer)
 
     def compile(self, lossfn, optim):
         self.lossfn = lossfn
@@ -95,10 +95,13 @@ class Loss:
 class Optimizer:
     # all void func's
     # can use __init__ to set learning rate manually from test file
-    def SGD(self, layer, learning_rate=1e-6):
-        layer.weight -= learning_rate * layer.grad
+    def __init__(self, learning_rate):
+        self.learning_rate = learning_rate
 
-    def Adam(self, layer, learning_rate=1e-3, b1=0.9, b2=0.999, eps=1e-8):
+    def SGD(self, layer):
+        layer.weight -= self.learning_rate * layer.grad
+
+    def Adam(self, layer, b1=0.9, b2=0.999, eps=1e-8):
         m, v, t = 0, 0, 0
         tmp = 0  # to record weight change
         while np.abs((tmp-layer.weight).sum()/layer.weight.sum()) > 1e-1:
@@ -111,4 +114,4 @@ class Optimizer:
             # prev weight
             tmp = layer.weight
             # current weight
-            layer.weight -= learning_rate*mhat/(vhat**0.5+eps)
+            layer.weight -= self.learning_rate*mhat/(vhat**0.5+eps)
