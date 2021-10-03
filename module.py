@@ -30,6 +30,10 @@ class Activation:
         S = np.array(list(map(lambda x: 1/(1+np.exp(-x)), xx)))
         return S, np.multiply(S, (1-S))
 
+    def Softmax(self, x):
+        fp = np.divide(np.exp(x).T, np.exp(x.sum(axis=1))).T
+        return fp, fp
+
 
 class Model:
     """implement training on batch"""
