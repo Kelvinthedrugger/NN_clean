@@ -64,9 +64,12 @@ class Model:
         self.lossfn = lossfn
         self.optim = optim
 
-    def fit(self, x, y, epoch):
+    def fit(self, X, Y, epoch, batch_size=32):
         history = {"loss": [], "accuracy": []}
         for _ in range(epoch):
+            samp = np.random.randint(0, len(X), size=batch_size)
+            x = X[samp]
+            y = Y[samp]
             yhat = self.forward(x)
             loss, gradient = self.lossfn(self, y, yhat)
             self.backward(gradient)
@@ -88,6 +91,7 @@ class Loss:
         return loss, diff
 
     def crossentropy(self, y, yhat, supervised=True, num_class=10):
+        """softmax + cross entropy loss"""
         label = np.zeros((len(y), num_class), dtype=np.float32)
         label[range(label.shape[0]), y] = 1
         los = (-yhat + np.log(np.exp(yhat).sum(axis=1)).reshape((-1, 1)))

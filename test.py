@@ -6,22 +6,25 @@ from time import time
 
 if __name__ == "__main__":
     xtrain, ytrain, _, _ = mnist()
-    x = xtrain[:5].reshape(-1, 28*28)
-    y = ytrain[:5]
+    x = xtrain[:].reshape(-1, 28*28)
+    y = ytrain[:]
+
     layer1 = nn.Tensor(784, 128)
     layer2 = nn.Tensor(128, 10)
+
     model = nn.Model([
         layer1,
         nn.Activation.ReLU,
         layer2,
-        nn.Activation.Softmax
     ])
+
     lossfn = nn.Loss.crossentropy
     optimizer = nn.Optimizer(5e-4).Adam
     model.compile(lossfn, optimizer)
     start = time()  # found out to be linear time wrt epoch
-    hist = model.fit(x, y, epoch=10)
+    hist = model.fit(x, y, epoch=1000, batch_size=32)
     end = time()
+
     print("accuracy: %.4f" % (sum(hist["accuracy"])/len(hist["accuracy"])))
     print("time spent: %.4f sec" % (end-start))
     plt.plot(hist["loss"])
