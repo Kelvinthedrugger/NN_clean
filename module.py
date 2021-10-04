@@ -1,8 +1,3 @@
-"""
-No Activation, No Accuracy
-# try to implement training on batch
-"""
-
 import numpy as np
 
 
