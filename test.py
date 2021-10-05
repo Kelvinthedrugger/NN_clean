@@ -22,10 +22,11 @@ if __name__ == "__main__":
     optimizer = nn.Optimizer(5e-4).Adam
     model.compile(lossfn, optimizer)
     start = time()  # found out to be linear time wrt epoch
-    hist = model.fit(x, y, epoch=1000, batch_size=32)
+    hist = model.fit(x, y, epoch=1000, batch_size=128)
     end = time()
 
-    print("accuracy: %.4f" % (sum(hist["accuracy"])/len(hist["accuracy"])))
+    print("loss: %.4f accuracy: %.4f" %
+          (hist["loss"][-1], sum(hist["accuracy"])/len(hist["accuracy"])))
     print("time spent: %.4f sec" % (end-start))
     plt.plot(hist["loss"])
     plt.plot(hist["accuracy"])

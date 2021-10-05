@@ -31,8 +31,6 @@ class Activation:
 
 
 class Model:
-    """implement training on batch"""
-
     def __init__(self, layers):
         self.model = layers
 
@@ -97,8 +95,7 @@ class Loss:
 
 
 class Optimizer:
-    # all void func's
-    # can use __init__ to set learning rate manually from test file
+    # void func's
     def __init__(self, learning_rate):
         self.learning_rate = learning_rate
 
@@ -108,7 +105,7 @@ class Optimizer:
     def Adam(self, layer, b1=0.9, b2=0.999, eps=1e-8):
         m, v, t = 0, 0, 0
         tmp = 0  # to record weight change
-        while np.abs((tmp-layer.weight).sum()/layer.weight.sum()) > 1e-1:
+        while np.abs(((tmp-layer.weight).sum())/layer.weight.sum()) > 1e-1:
             t += 1
             g = layer.grad
             m = b1*m + (1-b1)*g
