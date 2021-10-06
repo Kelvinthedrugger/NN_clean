@@ -34,6 +34,9 @@ class Model:
     def __init__(self, layers):
         self.model = layers
 
+    def add(self, layer):
+        self.model.append(layer)
+
     def forward(self, x):
         for layer in self.model:
             if not isinstance(layer, Tensor):
@@ -70,6 +73,10 @@ class Model:
             history["accuracy"].append(
                 (yhat.argmax(axis=1) == y).astype(np.float32).mean())
         return history
+
+    def summary(self):
+        # print each layer + loss (optional)
+        pass
 
 
 class Loss:
