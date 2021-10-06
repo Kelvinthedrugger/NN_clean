@@ -76,7 +76,10 @@ class Model:
 
     def summary(self):
         # print each layer + loss (optional)
-        pass
+        for layer in self.model:
+            print("type  ", layer.shape)
+        if self.lossfn is not None:
+            print("loss: name")  # to be implement name of each function
 
 
 class Loss:
