@@ -53,3 +53,10 @@ class AutoML:
     def forward(self, x):
         """actual forward pass on the dataset"""
         pass
+    def backward_layer(self):
+        """backprop to generate weights"""
+        pass
+
+    def backward(self, x):
+        """actual backprop on the dataset"""
+        pass
