@@ -28,7 +28,28 @@ forward pass:
   side chains -> main model
 """
 
+"""
+# inputs: 
+#   layers and the shape
+#   (optional) hyperparams: learning_rate, batchsize
+"""
+
 
 class AutoML:
-    def __init__(self):
+    def __init__(self, layers):
+        # layer: shape of layers
+        # seed -> generator layer -> the layer (output)
+        model = [[] for _ in range(len(layers))]
+        for i in range(len(layers)):
+            assert isinstance(layers[i], tuple)
+            model[i].append(layer_init(layers[i][0], 1))
+            model.append(Tensor(1, layers[i][0]))
+        self.model = model  # the production layer
+
+    def forward_layer(self):
+        """forward pass to generate weights"""
+        pass
+
+    def forward(self, x):
+        """actual forward pass on the dataset"""
         pass
