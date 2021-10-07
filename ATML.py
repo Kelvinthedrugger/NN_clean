@@ -39,6 +39,8 @@ class AutoML:
     def __init__(self, layers):
         # layer: shape of layers
         # seed -> generator layer -> the layer (output)
+        # random weight -> Tensor -> Tensor
+        # not scalable yet
         model = [[] for _ in range(len(layers))]
         for i in range(len(layers)):
             assert isinstance(layers[i], tuple)
