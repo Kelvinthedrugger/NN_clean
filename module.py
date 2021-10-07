@@ -6,8 +6,11 @@ def layer_init(row, col):
 
 
 class Tensor:
-    def __init__(self, h, w):
-        self.weight = layer_init(h, w)  # layer
+    def __init__(self, h, w, weight=None):
+        if weight is None:
+            self.weight = layer_init(h, w)  # layer
+        else:
+            self.weight = weight
         self.forward = None  # to save forward pass from previous layer
         self.grad = None  # d_layer
         self.trainable = True

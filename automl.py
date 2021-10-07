@@ -18,6 +18,11 @@ if __name__ == "__main__":
     L1_g = nn.Tensor(1, 128)
     L2_g = nn.Tensor(1, 10)
 
+    """
+    layer1: L1_seed @ L1_g
+    layer2: L2_seed @ L2_g
+    """
+
     # model layer
     layer1 = nn.Tensor(784, 128)
     layer2 = nn.Tensor(128, 10)
