@@ -24,12 +24,12 @@ if __name__ == "__main__":
     np.random.seed(1337)
 
     xtrain, ytrain, _, _ = mnist()
-    x = xtrain[:].reshape(-1, 28*28)
-    y = ytrain[:]
+    x = xtrain[:100].reshape(-1, 28*28)
+    y = ytrain[:100]
 
     model = AutoML([(784, 128), (128, 10)])
     """# the arithmetic"""
-    model.compile(nn.Loss.crossentropy, nn.Optimizer(2e-5).Adam)
+    model.compile(nn.Loss.crossentropy, nn.Optimizer(5e-6).Adam)
     # model.fit(x, y)
     # print(model.model[0][-1].weight)
     # print("")
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # print(model.model[0][-1].weight)
     from time import time
     start = time()  # found out to be linear time wrt epoch
-    hist = model.fit(x, y, epoch=1000, batch_size=128)
+    hist = model.fit(x, y, epoch=1000, batch_size=32)
     end = time()
 
     print("loss: %.4f accuracy: %.4f" %
