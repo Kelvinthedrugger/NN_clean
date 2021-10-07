@@ -6,7 +6,7 @@ def layer_init(row, col):
 
 
 class Tensor:
-    def __init__(self, h, w, weight=None):
+    def __init__(self, h=2, w=2, weight=None):
         if weight is None:
             self.weight = layer_init(h, w)  # layer
         else:

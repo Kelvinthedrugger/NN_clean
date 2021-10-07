@@ -3,6 +3,22 @@ import module as nn
 from fetch_it import mnist
 from matplotlib import pyplot as plt
 
+"""
+we have to implement model concatenate first (or Adder)
+
+automl model:
+
+    L1_s   L2_s
+      v     v
+    L1_g   L2_g
+      v     v
+ x -> L1 -> L2 -> y
+
+forward pass:
+  side chains -> main model
+
+"""
+
 if __name__ == "__main__":
     np.random.seed(1337)
 
@@ -10,11 +26,11 @@ if __name__ == "__main__":
     x = xtrain[:64].reshape(-1, 28*28)
     y = ytrain[:64]
 
-    # seed
+    # seed: initialize inside the model ?
     L1_seed = nn.layer_init(784, 1)
     L2_seed = nn.layer_init(128, 1)
 
-    # automl layer
+    # automl layer: in the Model argument
     L1_g = nn.Tensor(1, 128)
     L2_g = nn.Tensor(1, 10)
 
