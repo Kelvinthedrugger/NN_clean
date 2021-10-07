@@ -10,6 +10,7 @@ class Tensor:
         self.weight = layer_init(h, w)  # layer
         self.forward = None  # to save forward pass from previous layer
         self.grad = None  # d_layer
+        self.trainable = True
 
 
 class Activation:
@@ -54,7 +55,10 @@ class Model:
             else:
                 layer.grad = layer.forward.T @ bpass
                 bpass = bpass @ (layer.weight.T)
-                self.optim(layer)
+                if layer.trainable:
+                    self.optim(layer)
+                else:
+                    pass
 
     def compile(self, lossfn, optim):
         self.lossfn = lossfn
