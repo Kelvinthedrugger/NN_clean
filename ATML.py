@@ -43,20 +43,36 @@ class AutoML:
         for i in range(len(layers)):
             assert isinstance(layers[i], tuple)
             model[i].append(layer_init(layers[i][0], 1))
-            model.append(Tensor(1, layers[i][0]))
+            model[i].append(Tensor(1, layers[i][0]))
         self.model = model  # the production layer
 
     def forward_layer(self):
         """forward pass to generate weights"""
-        pass
+        for model in self.model:
+            layer = Tensor(model[0] @ model[1])
+            layer.trainable = False
+            model.append(layer)
 
     def forward(self, x):
         """actual forward pass on the dataset"""
-        pass
+        # forget about activation function right now
+        # so set the learning rate lower
+        for i in range(len(self.model)):
+            # last layer is the layer in the main model
+            layer = self.model[i][-1]
+            layer.forward = x
+            x = x @ layer.weight
+
+    def backward(self, bpass):
+        """actual backprop on the dataset"""
+        # no update in weights of the main model via backprop!
+        for i in range(len(self.model)):
+            layer = self.model[-i][-1]  # it's backprop
+            layer.grad = layer.forward.T @ bpass
+            bpass = bpass @ (layer.weight.T)
+
     def backward_layer(self):
         """backprop to generate weights"""
-        pass
-
-    def backward(self, x):
-        """actual backprop on the dataset"""
-        pass
+        for model in self.model:
+            # ready for optim
+            model[1].grad = model[0].T @ model[2].grad
