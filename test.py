@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 from time import time
 
 if __name__ == "__main__":
-    xtrain, ytrain, _, _ = mnist()
+    xtrain, ytrain, xtest, ytest = mnist()
     x = xtrain[:].reshape(-1, 28*28)
     y = ytrain[:]
 
@@ -28,6 +28,11 @@ if __name__ == "__main__":
     print("loss: %.4f accuracy: %.4f" %
           (hist["loss"][-1], sum(hist["accuracy"])/len(hist["accuracy"])))
     print("time spent: %.4f sec" % (end-start))
+    start = time()
+    test_accu = model.evaluate(xtest.reshape(-1, 28*28), ytest)
+    end = time()
+    print("test accuracy: %.4f" % (test_accu))
+    print("test time: %.4f sec" % (end-start))
     plt.plot(hist["loss"])
     plt.plot(hist["accuracy"])
     plt.legend(["loss", "accuracy"])

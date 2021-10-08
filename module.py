@@ -81,6 +81,16 @@ class Model:
                 (yhat.argmax(axis=1) == y).astype(np.float32).mean())
         return history
 
+    def evaluate(self, X, Y, batch_size=32):
+        accuracy = 0  # return last value instead of the record
+        assert len(X) == len(Y)
+        for i in range(len(X)//batch_size):
+            x = X[i:i+batch_size]
+            y = Y[i:i+batch_size]
+            yhat = self.forward(x)
+            accuracy = (yhat.argmax(axis=1) == y).astype(np.float32).mean()
+        return accuracy
+
     def summary(self):
         # print each layer + loss (optional)
         for layer in self.model:
