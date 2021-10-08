@@ -26,7 +26,7 @@ if __name__ == "__main__":
     end = time()
 
     print("loss: %.4f accuracy: %.4f" %
-          (hist["loss"][-1], sum(hist["accuracy"])/len(hist["accuracy"])))
+          (hist["loss"][-1], hist["accuracy"][-1]))
     print("time spent: %.4f sec" % (end-start))
     start = time()
     test_accu = model.evaluate(xtest.reshape(-1, 28*28), ytest)
