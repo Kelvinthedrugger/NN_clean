@@ -18,23 +18,29 @@ inputs:
 
 
 class AutoML:
-    def __init__(self, layers):
+    def __init__(self, layers, layer_depth=None):
         """# random weight -> Tensor -> Tensor"""
         # layer: shape of layers
         # seed -> generator layer -> the layer (output)
         # not scalable yet
+        if layer_depth is None:
+            layer_depth = [1] * len(layers)
         model = [[] for _ in range(len(layers))]
         for i in range(len(layers)):
             assert isinstance(layers[i], tuple)
-            model[i].append(layer_init(layers[i][0], 1))
-            model[i].append(Tensor(1, layers[i][1]))
-            model[i].append(Tensor(weight=model[i][0] @ (model[i][1].weight)))
+            model[i].append(layer_init(layers[i][0], layer_depth[i]))
+            model[i].append(Tensor(layer_depth[i], layers[i][1]))
+            model[i].append(Tensor(layers[i][0], layers[i][1]))
         self.model = model
 
     def forward_layer(self):
         """forward pass to generate weights in main model"""
         for model in self.model:
-            model[-1].weight = model[0] @ (model[1].weight)
+            # model[-1].weight = model[0] @ (model[1].weight)
+            x = model[0]
+            for i in range(1, len(model)-1):
+                x = x @ model[i].weight
+            model[-1].weight = x
 
     def forward(self, x):
         """actual forward pass on the dataset"""
@@ -58,6 +64,9 @@ class AutoML:
     def backward_layer(self):
         """backprop to generate weights"""
         for model in self.model:
+            for i in range(len(model)-2, 1, -1):
+                model[i].grad = model[i-1].weight.T @ model[i+1].grad
+                self.optimizer(model[i])
             model[1].grad = model[0].T @ model[2].grad
             self.optimizer(model[1])
 
