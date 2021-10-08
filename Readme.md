@@ -3,9 +3,13 @@ A much more cleaner neural network from scratch using numpy, for practicing & mo
     python test.py
 
 Best performance: 
+
  loss: 0.0451 accuracy: 0.9230
+
  time spent: 4.5519 sec
+
  test accuracy: 0.9688
+ 
  test time: 0.0514 sec
 
 # TODO
