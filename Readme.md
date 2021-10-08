@@ -22,4 +22,6 @@ Best performance:
 
     add LSTM
 
+    add model.save() method 
+
 
