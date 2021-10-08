@@ -28,13 +28,13 @@ class AutoML:
             assert isinstance(layers[i], tuple)
             model[i].append(layer_init(layers[i][0], 1))
             model[i].append(Tensor(1, layers[i][1]))
+            model[i].append(Tensor(weight=model[i][0] @ (model[i][1].weight)))
         self.model = model
 
     def forward_layer(self):
         """forward pass to generate weights in main model"""
         for model in self.model:
-            layer = Tensor(weight=model[0] @ (model[1].weight))
-            model.append(layer)
+            model[-1].weight = model[0] @ (model[1].weight)
 
     def forward(self, x):
         """actual forward pass on the dataset"""
@@ -67,8 +67,8 @@ class AutoML:
 
     def fit(self, X, Y, epoch=5, batch_size=32):
         history = {"loss": [], "accuracy": []}
-        self.forward_layer()  # create the layer in main model
         for _ in range(epoch):
+            self.forward_layer()  # create the layer in main model
             samp = np.random.randint(0, len(X), size=batch_size)
             x = X[samp]
             y = Y[samp]

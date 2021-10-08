@@ -11,17 +11,13 @@ if __name__ == "__main__":
     y = ytrain[:1000]
 
     model = AutoML([(784, 128), (128, 10)])
-    """# the arithmetic"""
-    model.compile(nn.Loss.crossentropy, nn.Optimizer(1e-2).SGD)
-    print(model.model[0][-1].weight[0])
+    model.compile(nn.Loss.crossentropy, nn.Optimizer(1e-3).Adam)
     from time import time
     start = time()
     hist = model.fit(x, y, epoch=1000, batch_size=128)
     end = time()
-    print("")
-    print(model.model[0][-1].weight[:10])
     print("loss: %.4f accuracy: %.4f" %
-          (hist["loss"][-1], sum(hist["accuracy"])/len(hist["accuracy"])))
+          (hist["loss"][-1], hist["accuracy"][-1]))
     print("time spent: %.4f sec" % (end-start))
     plt.plot(hist["loss"])
     plt.plot(hist["accuracy"])
