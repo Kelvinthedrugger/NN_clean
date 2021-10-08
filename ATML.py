@@ -44,8 +44,6 @@ class AutoML:
             # last layer is the layer in the main model
             layer = self.model[i][-1]
             layer.forward = x
-            # print("x shape: ", x.shape)
-            # print("layer shape:", layer.weight.shape)
             x = x @ layer.weight
         return x
 
@@ -55,9 +53,6 @@ class AutoML:
         for i in range(len(self.model)-1, -1, -1):
             layer = self.model[i][-1]
             layer.grad = layer.forward.T @ bpass
-            # print("bpass shape", bpass.shape)
-            # print("layer grad shape", layer.grad.shape)
-            # print("layer shape", layer.weight.shape)
             bpass = bpass @ (layer.weight.T)
 
     def backward_layer(self):

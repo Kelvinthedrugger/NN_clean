@@ -4,21 +4,6 @@ from fetch_it import mnist
 from matplotlib import pyplot as plt
 from ATML import AutoML
 
-"""
-we have to implement model concatenate first (or Adder)
-
-automl model:
-
-    L1_s   L2_s
-      v     v
-    L1_g   L2_g
-      v     v
- x -> L1 -> L2 -> y
-
-forward pass:
-  side chains -> main model
-
-"""
 
 if __name__ == "__main__":
     xtrain, ytrain, _, _ = mnist()
@@ -27,8 +12,8 @@ if __name__ == "__main__":
 
     model = AutoML([(784, 128), (128, 10)])
     """# the arithmetic"""
-    model.compile(nn.Loss.crossentropy, nn.Optimizer(1e-4).Adam)
-    print(model.model[0][-1].weight[:10])
+    model.compile(nn.Loss.crossentropy, nn.Optimizer(1e-2).SGD)
+    print(model.model[0][-1].weight[0])
     from time import time
     start = time()
     hist = model.fit(x, y, epoch=1000, batch_size=128)
