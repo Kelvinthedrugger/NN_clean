@@ -16,11 +16,11 @@ Best performance:
 
     add activation (matters for numerical stability): done
 
-    add concat model feature (Adder in electronics) -> AutoML: tuning problem
+    add concat model feature (Adder in electronics) -> (fake) AutoML: tuning problem
 
     add convolution
 
-    add LSTM
+    add LSTM -> add RL -> Real AutoML
 
     add model.save() method 
 
