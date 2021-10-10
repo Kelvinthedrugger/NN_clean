@@ -6,7 +6,7 @@ Best performance:
 
  loss: 0.0434, accuracy: 0.9297
 
- time spent: 4.4415 sec
+ time spent: 4.4415 sec (2 epochs)
 
  test accuracy: 0.9917
 
