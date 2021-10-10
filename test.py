@@ -25,11 +25,11 @@ if __name__ == "__main__":
     hist = model.fit(x, y, epoch=1000, batch_size=128)
     end = time()
 
-    print("loss: %.4f accuracy: %.4f" %
+    print("loss: %.4f, accuracy: %.4f" %
           (hist["loss"][-1], hist["accuracy"][-1]))
     print("time spent: %.4f sec" % (end-start))
     start = time()
-    test_accu = model.evaluate(xtest.reshape(-1, 28*28), ytest)
+    test_accu = model.evaluate(xtest.reshape(-1, 28*28), ytest, batch_size=80)
     end = time()
     print("test accuracy: %.4f" % (test_accu))
     print("test time: %.4f sec" % (end-start))
