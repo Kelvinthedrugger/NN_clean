@@ -10,7 +10,6 @@ class Conv:
         for r in range(filters):
             weight[r, :, :] = layer_init(kernel_size, kernel_size)
         self.weight = weight
-        #self.weight = layer_init(kernel_size, kernel_size)
         self.stride = stride
         self.padding = padding  # bool
         # below similar to Tensor
@@ -21,6 +20,7 @@ class Conv:
     def __call__(self, x):
         rows, cols = x.shape
         out = np.zeros((self.filters, rows-2, cols-2), dtype=np.float32)
+        # now, it's fake gradient
         for r in range(self.filters):
             grad = 0
             for k in range(0, (rows-self.kernel_size)//self.stride + 1, self.stride):
@@ -35,7 +35,7 @@ class Conv:
 
 if __name__ == "__main__":
     np.random.seed(1337)
-    layer = Conv(2, 3)
+    layer = Conv(filters=2, kernel_size=3)
     x = np.random.uniform(-1, 1, size=(5, 5))
     out = layer(x)
     print(out)
