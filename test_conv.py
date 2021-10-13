@@ -1,5 +1,16 @@
-from module import layer_init
+from module import layer_init, Tensor
+from module.Loss import mse
 import numpy as np
+
+
+"""
+construct a image (say, a 5) and label it
+-> establish a 1-conv_layer model
+-> define loss as mse (since it's the simplest)
+-> train on the image & figure conv backprop out
+
+integrate initialization with Tensor
+"""
 
 
 class Conv:
