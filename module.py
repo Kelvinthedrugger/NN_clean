@@ -34,21 +34,12 @@ class Activation:
         return fp, fp
 
 
-class Model:
+class Sequential:
     def __init__(self, layers):
         self.model = layers
 
     def add(self, layer):
         self.model.append(layer)
-
-    def concatenate(self, layer):
-        """
-        # milestone to custom model
-        Adder: directly pass the gradient to all
-        Multiplier: product rule; y=a*b dy/da = b, dy/db = a
-        """
-
-        pass
 
     def forward(self, x):
         """go add graph topo"""
@@ -70,8 +61,6 @@ class Model:
                 bpass = bpass @ (layer.weight.T)
                 if layer.trainable:
                     self.optim(layer)
-                else:
-                    pass
 
     def compile(self, lossfn, optim):
         self.lossfn = lossfn
@@ -111,6 +100,15 @@ class Model:
 
     def save(self):
         """dict of arrays"""
+        pass
+
+
+class Model:
+    def __init__(self):
+        """
+        construct topo available model here
+        , consider started from layer class
+        """
         pass
 
 

@@ -12,7 +12,8 @@ if __name__ == "__main__":
     layer1 = nn.Tensor(784, 128)
     layer2 = nn.Tensor(128, 10)
 
-    model = nn.Model([
+    # dense model (DNN)
+    model = nn.Sequential([
         layer1,
         nn.Activation.ReLU,
         layer2,
