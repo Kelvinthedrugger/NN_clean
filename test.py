@@ -41,3 +41,5 @@ if __name__ == "__main__":
     plt.ylabel("loss")
     plt.title("Mnist")
     plt.show()
+
+    model.save(name="model_3.txt")

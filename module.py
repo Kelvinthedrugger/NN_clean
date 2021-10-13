@@ -98,9 +98,22 @@ class Sequential:
         if self.lossfn is not None:
             print("loss: name")  # to be implement name of each function
 
-    def save(self):
+    def save(self, name="model_0.txt"):
         """dict of arrays"""
-        pass
+        import os
+        fp = os.path.join("record", name)  # for instance: model_0
+        # rename to avoid collision and overwritten
+        print("filename %s" % fp)
+        # return
+        with open(fp, "x") as f:
+            for layer in self.model:
+                f.write("\nlayer %d\n\n" % (self.model.index(layer)+1))
+                if isinstance(layer, Tensor):
+                    for row in layer.weight:
+                        for ele in row:
+                            f.write(str(ele)+" ")
+                        f.write("\n\n")
+            f.close()
 
 
 class Model:
