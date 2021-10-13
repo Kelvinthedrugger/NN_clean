@@ -41,7 +41,17 @@ class Model:
     def add(self, layer):
         self.model.append(layer)
 
+    def concatenate(self, layer):
+        """
+        # milestone to custom model
+        Adder: directly pass the gradient to all
+        Multiplier: product rule; y=a*b dy/da = b, dy/db = a
+        """
+
+        pass
+
     def forward(self, x):
+        """go add graph topo"""
         for layer in self.model:
             if not isinstance(layer, Tensor):
                 x, grad = layer(self, x)
@@ -98,6 +108,10 @@ class Model:
             print("type  ", layer.shape)
         if self.lossfn is not None:
             print("loss: name")  # to be implement name of each function
+
+    def save(self):
+        """dict of arrays"""
+        pass
 
 
 class Loss:
