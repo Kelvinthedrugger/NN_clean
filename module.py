@@ -99,7 +99,10 @@ class Sequential:
             print("loss: name")  # to be implement name of each function
 
     def save(self, name="model_0.txt"):
-        """dict of arrays"""
+        """
+        dict of arrays
+        file format needs to be changed, ref: fetch_it.py
+        """
         import os
         fp = os.path.join("record", name)  # for instance: model_0
         # rename to avoid collision and overwritten
