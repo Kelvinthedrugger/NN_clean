@@ -31,16 +31,12 @@ class Conv:
         """add padding"""
         rows, cols = x.shape
         out = np.zeros((self.filters, rows-2, cols-2), dtype=np.float32)
-        # now, it's fake gradient
         for r in range(self.filters):
-            #grad = 0
             for k in range(0, (rows-self.kernel_size)//self.stride + 1, self.stride):
                 for m in range(0, (cols-self.kernel_size)//self.stride+1, self.stride):
                     tmp = x[k:k+self.kernel_size, m:m+self.kernel_size]
                     ret = np.multiply(self.weight[r], tmp)
                     out[r, k, m] = ret.sum()
-                    # grad += tmp.T @ ret  # gradient wrt filter
-            # self.grad[r].append(grad)
         return out
 
 
