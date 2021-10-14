@@ -152,7 +152,7 @@ class Loss:
 
 class Optimizer:
     # void func's
-    def __init__(self, learning_rate):
+    def __init__(self, learning_rate=1e-3):
         self.learning_rate = learning_rate
 
     def SGD(self, layer):
