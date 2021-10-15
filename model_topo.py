@@ -5,7 +5,7 @@ import numpy as np
 class Layer:
     """a qualified tensor based on tree structure"""
 
-    def __init__(self, h, w, weight=None):
+    def __init__(self, h=1, w=1, weight=None):
         if weight is None:
             # figure out how to take tuple argument and parse it automatically
             self.weight = layer_init(h, w)
@@ -26,6 +26,7 @@ class Layer:
         """
         x.child = self
         self.prev = x
+        return x
 
     def forward(self, x):
         # x: input data here
@@ -33,5 +34,8 @@ class Layer:
 
 
 if __name__ == "__main__":
-    layer1 = Layer((12, 3))
-    layer2 = Layer((3, 2))
+    np.random.seed(1337)
+    layer1 = Layer(12, 3)
+    layer2 = Layer(3, 2)
+    x = layer2(layer1)
+    assert layer1.child == layer2
