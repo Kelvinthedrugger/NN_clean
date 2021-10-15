@@ -19,24 +19,17 @@ class Layer:
         self.grad = None  # d_layer
         self.trainable = True
 
-
-class Model:
-    def __init__(self, layers):
+    def __call__(self, x):
         """
-        construct topo available model here
-        , consider started from layer class
+        x: the next layer
+        let loss(last layer) be the root node (tree-like structure)
         """
-        # layers: List
-        for i in range(len(layers)):
-            if i == 0:
-                layers[i].child = layers[i+1]
-            elif i < len(layers)-2:
-                layers[i].prev = layers[i-1]
-                layers[i].child = layers[i+1]
-            else:
-                layers[i].prev = layers[i-1]
+        x.child = self
+        self.prev = x
 
-        self.model = layers
+    def forward(self, x):
+        # x: input data here
+        return x @ self.weight
 
 
 if __name__ == "__main__":
