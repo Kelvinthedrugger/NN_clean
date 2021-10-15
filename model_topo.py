@@ -5,10 +5,10 @@ import numpy as np
 class Layer:
     """a qualified tensor based on tree structure"""
 
-    def __init__(self, weight=None):
-        if isinstance(weight, tuple):
+    def __init__(self, h, w, weight=None):
+        if weight is None:
             # figure out how to take tuple argument and parse it automatically
-            self.weight = layer_init(weight[0], weight[1])
+            self.weight = layer_init(h, w)
         else:
             self.weight = weight
         # topo
