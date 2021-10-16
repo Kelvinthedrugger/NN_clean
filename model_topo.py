@@ -24,13 +24,14 @@ class Layer:
         x: the next layer
         let loss(last layer) be the root node (tree-like structure)
         """
-        x.child = self
-        self.prev = x
+        self.child = x
+        x.prev = self
         return x
 
-    def forward(self, x):
-        # x: input data here
-        return x @ self.weight
+    def forwards(self, ds):
+        if self.child is not None:
+            ds = self.child.forwards(ds)
+        return ds @ self.weight
 
 
 if __name__ == "__main__":
@@ -38,4 +39,8 @@ if __name__ == "__main__":
     layer1 = Layer(12, 3)
     layer2 = Layer(3, 2)
     x = layer2(layer1)
-    assert layer1.child == layer2
+    assert layer2.child == layer1
+    ds1 = np.random.uniform(-1., 1., size=(12,)).astype(np.float32)
+    ans1 = ds1 @ layer1.weight @ layer2.weight
+    ans2 = layer2.forwards(ds1)
+    assert ans1.all() == ans2.all()
