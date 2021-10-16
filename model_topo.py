@@ -39,7 +39,7 @@ if __name__ == "__main__":
     np.random.seed(1337)
     layer1 = Layer(12, 3)
     layer2 = Layer(3, 2)
-    x = layer2(layer1)
+    layer2(layer1)
     assert layer2.child == layer1
     ds1 = np.random.uniform(-1., 1., size=(12,)).astype(np.float32)
     ans1 = ds1 @ layer1.weight @ layer2.weight
