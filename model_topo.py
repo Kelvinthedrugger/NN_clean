@@ -31,6 +31,7 @@ class Layer:
     def forwards(self, ds):
         if self.child is not None:
             ds = self.child.forwards(ds)
+        self.forward = ds
         return ds @ self.weight
 
 
