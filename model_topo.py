@@ -9,21 +9,32 @@ class Activations:
         self.trainable = False
 
     def backwards(self, bpass):
-        # template
+        """to be overridden"""
         bpass = np.multiply(self.grad, bpass)
         if self.child is not None:
             self.child.backwards(bpass)
 
 
 class ReLU(Activations):
+    def __call__(self, layer):
+        self.child = layer
+        return layer
+
     def forwards(self, x):
+        if self.child is not None:
+            x = self.child.forwards(x)
         out = np.maximum(x, 0)
         self.grad = (out > 0).astype(np.float32)
         return out
 
+    def backwards(self, bpass):
+        bpass = np.multiply(self.grad, bpass)
+        if self.child is not None:
+            self.child.backwards(bpass)
+
 
 class Layer:
-    """a qualified tensor based on tree structure"""
+    """a qualified tensor based on tree structure, loss being the root node"""
 
     def __init__(self, h=1, w=1, weight=None):
         if weight is None:
@@ -38,21 +49,16 @@ class Layer:
         self.grad = None  # d_layer
         self.trainable = True
 
-    def __call__(self, x):
-        """
-        x: the next layer
-        let loss(last layer) be the root node (tree-like structure)
-        """
-        self.child = x
-        return x
+    def __call__(self, layer):
+        self.child = layer
+        return layer
 
     def forwards(self, ds):
         if self.child is not None:
             ds = self.child.forwards(ds)
-        #     ds = self.forwards(ds)
-        #     return ds
-        self.forward = ds
-        return ds @ self.weight
+        if isinstance(self, Layer):
+            self.forward = ds
+            return ds @ self.weight
 
     def backwards(self, bpass):
         if self.trainable:
@@ -98,32 +104,27 @@ def random_ds():
 
 
 if __name__ == "__main__":
-    np.random.seed(1337)
-
     # on mnist
     from fetch_it import mnist
     x_train, y_train, x_test, y_test = mnist()
     layer3 = Layer(784, 128)
     act = ReLU()
     layer4 = Layer(128, 10)
-    # layer4(layer3)
-    layer4.child = layer3
-    # layer4.child = act
-    # act.child = layer3
 
-    lossfn = Loss().mse
-    optim = Optimizer(learning_rate=1e-6).Adam
+    layer4(act(layer3))
+
+    lossfn = Loss().crossentropy
+    optim = Optimizer(learning_rate=1e-4).SGD
 
     batch_size = 128
     mnist_loss = {"loss": [], "val_loss": []}
     from time import time
     start = time()
-    for epoch in range(60):
+    for epoch in range(10):
         for _ in range(0, len(x_train)//batch_size, batch_size):
             samp = np.random.randint(0, len(x_train), size=batch_size)
             X = x_train[samp].reshape((-1, 28*28))
             Y = y_train[samp]
-
             out = layer4.forwards(X)
             lossess, grad = lossfn(Y, out)
             layer4.backwards(grad)
@@ -136,11 +137,15 @@ if __name__ == "__main__":
             mnist_loss["loss"].append(lossess.mean())
             mnist_loss["val_loss"].append(val_loss.mean())
     end = time()
+
     from matplotlib.pyplot import plot, show, title, legend, xlabel, ylabel
     print("time spent: %.4f" % (end-start))
+    print("loss: %.4f, val_loss: %.4f" %
+          (mnist_loss["loss"][-1], mnist_loss["val_loss"][-1]))
     plot(mnist_loss["loss"])
     plot(mnist_loss["val_loss"])
+    title("Mnist dataset")
     legend(["loss", "val_loss"])
-    xlabel("epoch")
+    xlabel("num of batched data")
     ylabel("loss")
     show()
