@@ -1,6 +1,8 @@
 from module import layer_init, Tensor, Loss, Optimizer
 import numpy as np
 
+"""backprop not done"""
+
 
 """
 construct a image (say, a 5) and label it

@@ -1,5 +1,6 @@
 import module as nn
 import numpy as np
+"""haven't invoke topo so far"""
 """
 (784,128)  (28,28)
 l11          l12
