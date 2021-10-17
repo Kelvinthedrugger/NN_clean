@@ -49,6 +49,8 @@ class Layer:
     def forwards(self, ds):
         if self.child is not None:
             ds = self.child.forwards(ds)
+        #     ds = self.forwards(ds)
+        #     return ds
         self.forward = ds
         return ds @ self.weight
 
@@ -102,8 +104,12 @@ if __name__ == "__main__":
     from fetch_it import mnist
     x_train, y_train, x_test, y_test = mnist()
     layer3 = Layer(784, 128)
+    act = ReLU()
     layer4 = Layer(128, 10)
-    layer4(layer3)
+    # layer4(layer3)
+    layer4.child = layer3
+    # layer4.child = act
+    # act.child = layer3
 
     lossfn = Loss().mse
     optim = Optimizer(learning_rate=1e-6).Adam
@@ -112,7 +118,7 @@ if __name__ == "__main__":
     mnist_loss = {"loss": [], "val_loss": []}
     from time import time
     start = time()
-    for epoch in range(10):
+    for epoch in range(60):
         for _ in range(0, len(x_train)//batch_size, batch_size):
             samp = np.random.randint(0, len(x_train), size=batch_size)
             X = x_train[samp].reshape((-1, 28*28))
@@ -135,6 +141,6 @@ if __name__ == "__main__":
     plot(mnist_loss["loss"])
     plot(mnist_loss["val_loss"])
     legend(["loss", "val_loss"])
-    xlabel("num of data")
+    xlabel("epoch")
     ylabel("loss")
     show()
