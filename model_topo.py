@@ -55,7 +55,8 @@ class Layer:
     def forwards(self, ds):
         if self.child is not None:
             ds = self.child.forwards(ds)
-        self.forward = ds
+        if self.trainable:
+            self.forward = ds
         return ds @ self.weight
 
     def backwards(self, bpass, optim=Optimizer().SGD):
