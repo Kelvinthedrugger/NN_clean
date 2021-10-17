@@ -58,7 +58,7 @@ class Layer:
         self.forward = ds
         return ds @ self.weight
 
-    def backwards(self, bpass):
+    def backwards(self, bpass, optim=Optimizer().SGD):
         if self.trainable:
             self.grad = self.forward.T @ bpass
             optim(self)
@@ -125,7 +125,7 @@ if __name__ == "__main__":
             Y = y_train[samp]
             out = layer4.forwards(X)
             lossess, grad = lossfn(Y, out)
-            layer4.backwards(grad)
+            layer4.backwards(grad, optim)
 
             # val loss
             ss = np.random.randint(0, len(x_test), size=batch_size)
