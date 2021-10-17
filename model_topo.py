@@ -7,7 +7,6 @@ class Layer:
 
     def __init__(self, h=1, w=1, weight=None):
         if weight is None:
-            # figure out how to take tuple argument and parse it automatically
             self.weight = layer_init(h, w)
         else:
             self.weight = weight
@@ -25,7 +24,6 @@ class Layer:
         let loss(last layer) be the root node (tree-like structure)
         """
         self.child = x
-        x.prev = self
         return x
 
     def forwards(self, ds):
@@ -37,6 +35,7 @@ class Layer:
     def backwards(self, bpass):
         if self.trainable:
             self.grad = self.forward.T @ bpass
+            optim(self)
         bpass = bpass @ (self.weight.T)
         if self.child is not None:
             self.child.backwards(bpass)
@@ -64,8 +63,8 @@ if __name__ == "__main__":
         ans2 = layer2.forwards(ds1)
         loss, gradient = lossfn(target, ans2, num_class=2)
         layer2.backwards(gradient)
-        optim(layer1)
-        optim(layer2)
+        # optim(layer1)
+        # optim(layer2)
         losses.append(loss.mean())
 
     from matplotlib.pyplot import plot, show, title, legend, xlabel, ylabel
