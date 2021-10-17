@@ -2,6 +2,26 @@ from module import layer_init, Loss, Optimizer
 import numpy as np
 
 
+class Activations:
+    def __init__(self):
+        self.child = None
+        self.grad = None
+        self.trainable = False
+
+    def backwards(self, bpass):
+        # template
+        bpass = np.multiply(self.grad, bpass)
+        if self.child is not None:
+            self.child.backwards(bpass)
+
+
+class ReLU(Activations):
+    def forwards(self, x):
+        out = np.maximum(x, 0)
+        self.grad = (out > 0).astype(np.float32)
+        return out
+
+
 class Layer:
     """a qualified tensor based on tree structure"""
 
