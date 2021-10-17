@@ -42,10 +42,9 @@ class Layer:
         else:
             self.weight = weight
         # topo
-        self.prev = None
         self.child = None
         # autograd
-        self.forward = None  # to save forward pass from previous layer
+        self.forward = None  # save forward pass from previous layer
         self.grad = None  # d_layer
         self.trainable = True
 
@@ -56,9 +55,8 @@ class Layer:
     def forwards(self, ds):
         if self.child is not None:
             ds = self.child.forwards(ds)
-        if isinstance(self, Layer):
-            self.forward = ds
-            return ds @ self.weight
+        self.forward = ds
+        return ds @ self.weight
 
     def backwards(self, bpass):
         if self.trainable:
