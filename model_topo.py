@@ -27,11 +27,6 @@ class ReLU(Activations):
         self.grad = (out > 0).astype(np.float32)
         return out
 
-    def backwards(self, bpass):
-        bpass = np.multiply(self.grad, bpass)
-        if self.child is not None:
-            self.child.backwards(bpass)
-
 
 class Layer:
     """a qualified tensor based on tree structure, loss being the root node"""
