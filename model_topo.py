@@ -74,3 +74,39 @@ if __name__ == "__main__":
     xlabel("epoch")
     ylabel("loss")
     show()
+
+    # on mnist
+    from fetch_it import mnist
+    x_train, y_train, x_test, y_test = mnist()
+    layer3 = Layer(784, 128)
+    layer4 = Layer(128, 10)
+    layer4(layer3)
+
+    optim = Optimizer(learning_rate=1e-6).Adam
+
+    batch_size = 128
+    mnist_loss = {"loss": [], "val_loss": []}
+    for epoch in range(10):
+        for _ in range(0, len(x_train)//batch_size, batch_size):
+            samp = np.random.randint(0, len(x_train), size=batch_size)
+            X = x_train[samp].reshape((-1, 28*28))
+            Y = y_train[samp]
+
+            out = layer4.forwards(X)
+            lossess, grad = lossfn(Y, out)
+            layer4.backwards(grad)
+
+            # val loss
+            ss = np.random.randint(0, len(x_test), size=batch_size)
+            outf = layer4.forwards(x_test[ss].reshape((-1, 28*28)))
+            val_loss, _ = lossfn(y_test[ss], outf)
+
+            mnist_loss["loss"].append(lossess.mean())
+            mnist_loss["val_loss"].append(val_loss.mean())
+
+    plot(mnist_loss["loss"])
+    plot(mnist_loss["val_loss"])
+    legend(["loss", "val_loss"])
+    xlabel("num of data")
+    ylabel("loss")
+    show()
