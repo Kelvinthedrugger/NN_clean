@@ -118,8 +118,8 @@ if __name__ == "__main__":
     mnist_loss = {"loss": [], "val_loss": []}
     from time import time
     start = time()
-    for epoch in range(10):
-        for _ in range(0, len(x_train)//batch_size, batch_size):
+    for epoch in range(2):
+        for _ in range(0, len(x_train), batch_size):
             samp = np.random.randint(0, len(x_train), size=batch_size)
             X = x_train[samp].reshape((-1, 28*28))
             Y = y_train[samp]
