@@ -9,7 +9,6 @@ class Activations:
         self.trainable = False
 
     def backwards(self, bpass):
-        """to be overridden"""
         bpass = np.multiply(self.grad, bpass)
         if self.child is not None:
             self.child.backwards(bpass)
