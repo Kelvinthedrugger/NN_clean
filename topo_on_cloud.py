@@ -1,9 +1,11 @@
 
 
 if __name__ == "__main__":
-    from module import layer_init, Loss, Optimizer
+    # from module import layer_init, Loss, Optimizer
+    # from model_topo import ReLU, Layer
+    from nn.module import layer_init, Loss, Optimizer
+    from nn.topo import ReLU, Layer
     import numpy as np
-    from model_topo import ReLU, Layer
 
     # on mnist
     from fetch_it import mnist
@@ -13,9 +15,9 @@ if __name__ == "__main__":
     act = ReLU()
     layer4 = Layer(128, 10)
     """
-    layer3 = Layer(weight=layer_init(784,128))
+    layer3 = Layer(weight=layer_init(784, 128))
     act = ReLU()
-    layer4 = Layer(weight=layer_init(128,10))
+    layer4 = Layer(weight=layer_init(128, 10))
 
     layer4(act(layer3))
 

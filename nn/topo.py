@@ -56,5 +56,4 @@ class Layer:
             optim(self)
         bpass = bpass @ (self.weight.T)
         if self.child is not None:
-            self.child.backwards(bpass)
-
+            self.child.backwards(bpass, optim)
