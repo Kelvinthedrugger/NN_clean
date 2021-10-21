@@ -38,3 +38,10 @@ Result:
     add model.save() method: 70%
 
     working on enabling usage on online notebook
+
+
+# Progress
+
+    # branch on_cloud works on colab!
+
+    !git clone -b on_cloud https://github.com/Kelvinthedrugger/NN_clean.git
