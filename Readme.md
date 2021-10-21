@@ -17,6 +17,12 @@ To see how complex topo works on random & mnist dataset, directly run:
 
     python model_topo.py
 
+Result:
+
+ time spent: 1.7370 (2 epochs)
+
+ loss: 0.0667, val_loss: 0.0316
+
 
 # TODO
 
@@ -31,4 +37,4 @@ To see how complex topo works on random & mnist dataset, directly run:
 
     add model.save() method: 70%
 
-
+    working on enabling usage on online notebook
