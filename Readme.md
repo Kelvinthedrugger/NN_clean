@@ -31,13 +31,13 @@ Result:
     add concat model feature (Adder in electronics): working on complex topo
         -> (fake) AutoML: tuning problem: done
 
-    add convolution: 50%
+    add Convolution: 96%, backprop done
 
     add LSTM -> add RL -> Real AutoML
 
     add model.save() method: 70%
 
-    working on enabling usage on online notebook
+    working on enabling usage on online notebook: done; see Progress &topo_on_cloud.py
 
 
 # Progress
