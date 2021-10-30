@@ -44,4 +44,4 @@ Result:
 
     # branch on_cloud works on colab!
 
-    !git clone -b on_cloud https://github.com/Kelvinthedrugger/NN_clean.git
+    !git clone https://github.com/Kelvinthedrugger/NN_clean.git
