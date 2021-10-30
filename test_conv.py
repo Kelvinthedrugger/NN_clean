@@ -1,4 +1,4 @@
-from module import layer_init, Tensor, Loss, Optimizer
+from nn.module import layer_init, Tensor, Loss, Optimizer
 import numpy as np
 
 """backprop not done"""
