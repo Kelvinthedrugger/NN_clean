@@ -1,4 +1,4 @@
-A much more cleaner neural network from scratch using numpy, for practicing & mood changing
+A much cleaner neural network from scratch using numpy, for practicing & mood changing
 
     python test.py
 
