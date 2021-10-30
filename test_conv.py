@@ -1,18 +1,6 @@
 from nn.module import layer_init, Tensor, Loss, Optimizer
 import numpy as np
 
-"""backprop not done"""
-
-
-"""
-construct a image (say, a 5) and label it
--> establish a 1-conv_layer model
--> define loss as mse (since it's the simplest)
--> train on the image & figure conv backprop out
-
-integrate initialization with Tensor
-"""
-
 
 class Conv:
     def __init__(self, filters, kernel_size, stride=1, padding=None):
@@ -24,13 +12,12 @@ class Conv:
         self.weight = weight
         self.stride = stride
         self.padding = padding  # bool
-        # below similar to Tensor
+        # similar to Tensor
         self.forward = None
         self.grad = np.zeros_like(weight)  # zeros with same shape as weight
         self.trainable = True
 
     def __call__(self, x):
-        """add padding"""
         rows, cols = x.shape
         out = np.zeros((self.filters, rows, cols), dtype=np.float32)
         for r in range(self.filters):
@@ -63,8 +50,6 @@ if __name__ == "__main__":
         assert out.shape == (1, 28, 28)
         # backprop
         loss, gradient = lossfn(x, out, supervised=False)
-        # tip: shape not aligned!
-        # layer.grad = x.T @ gradient  # wrong?
         tmpgrad = (x.T @ gradient).reshape((28, 28))
         # do conv update
         tmpker = np.zeros((3, 3), dtype=np.float32)
@@ -73,7 +58,6 @@ if __name__ == "__main__":
                 for m in range(0, (x.shape[1]-3)//1+1, 3):
                     tmpker += tmpgrad[k:k+3, m:m+3]
         layer.grad = tmpker
-        # updated weights to each filter not done
         optim(layer)
         losses.append(loss.mean())
 
