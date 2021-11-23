@@ -1,0 +1,11 @@
+
+ open a folder named "trees" & rewrite neural engine based on tree
+traversal:
+ 
+ structure:
+       root node: loss function(s)
+       leaf node: input layer(s)
+    forward pass: postorder 
+        backprop: preorder
+
+

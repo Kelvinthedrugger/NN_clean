@@ -3,5 +3,3 @@ __pycache__
 *.md~
 *.py.un~
 *.md.un~
-.gitignore
-
