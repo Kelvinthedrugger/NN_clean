@@ -32,27 +32,34 @@ class Tensor:
         self.child = []
 
 def mse(yhat,y):
-    loss = np.sum(np.square(yhat-y)) # scalar
-    grad = 2*np.mean(np.subtract(yhat,y),axis=1) # vector
+    loss = np.square(yhat-y) # scalar
+    grad = 2*np.subtract(yhat,y)#.mean(axis=1) # vector
     return loss.mean(), grad
 
-def train(inputs,matrix,output,lr=1e-4,lossfn=None,count=0,epochs=0):
+def train(inputs,matrix,output,lossfn=None,lr=1e-4):
     # model as tree (degenerate to linkedlist sometimes), lossfn: root node
-    if count == 2*epoch:
-        return
     # output: result(label?) and receive gradient
-    if matrix.link is None: # change to child when scale up
+    if matrix is None: # change to child when scale up
         # return gradient from loss function
-        _, output = lossfn()
-        epoch = 2 * count # might be buggy for multiple input layer (leaf node)
-    else:
-        # forward pass, count epoch
-        train(inputs @matrix.weight,matrix.link,output,lr,lossfn,count+1,epochs)
+        # return
+        _, output = lossfn(inputs,output)
+        return
+    # forward pass, count epoch
+    train(inputs @matrix.weight,matrix.link,output,lossfn,lr)
 
     # backprop and gradient descent 
-    matrix.weight -= lr * fpass.T @ output
+    matrix.weight -= lr * (inputs @ matrix.weight).T @ output
     output = output @ (matrix.weight.T)
 
+def test2():
+    # worked
+    x = np.array([3,1,2,4,2],dtype=np.float32)
+    y = np.array([0,1,0,0,0],dtype=np.float32)
+    mat = Tensor(5,5)
+    for i in range(20):
+        train(x,mat,y,mse,lr=1e-5)
+        #print("epoch: ",i+1, norm: ",mat.weight.sum(),)
+    print("x:\n",x,"\n\nxhat:\n",x @ mat.weight,"\n\ny: ",y)
 
 def test():
     np.random.seed(1337)
@@ -69,9 +76,6 @@ def test():
     postorder(b1,in1.weight,w1,lr)
     print(w1.weight,"\n\n", w2.weight)
 
-    # not tested yet
-    # train()
-
 class Linear(Tensor):
     def __init__(self,h=1,w=1,weight=None):
         super().__init__()
@@ -86,4 +90,4 @@ class Lossfn:
         pass
 """
 if __name__ == "__main__":
-    test()
+    test2()
