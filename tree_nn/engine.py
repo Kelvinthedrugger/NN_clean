@@ -18,7 +18,7 @@ def postorder(grad,fpass,layer,lr): # void
 # layers
 class Tensor:
     # abstraction: to be inherited
-    """every object as Tensor object?"""
+    # every object as Tensor object?
     def __init__(self,h=1,w=1,weight=None):
         if weight is None:
             self.weight = layer_init(h,w)
@@ -27,6 +27,39 @@ class Tensor:
 
         # previous layers, don't need parent since we use tree traversals
         self.child = []
+
+def backward(fpass,matrix,bpass,lr,lossfn):
+    if matrix.link == None: # lossfn
+        bpass = lossfn()
+    d_weight = fpass.T @ bpass
+    matrix.weight -= lr * d_weight
+    bpass = bpass @ (matrix.weight.T)
+
+
+def forward(inputs,matrix,output,lr=1e-4,lossfn=None):
+    # model as tree (degenerate to linkedlist sometimes)
+
+    # last node of model: lossfn
+    if matrix.link == None:
+        # last layer: forward pass are all done
+        # receive gradient from loss function
+        backward(inputs,matrix,output,lr,lossfn)
+        return
+    # output: result and receive gradient
+    output = inputs @ matrix.weight
+    forward(output,matrix.link,output,lr,lossfn)
+    # execute after forward pass are done and not the last layer
+    backward(inputs,matrix,output,lr,lossfn)
+
+
+def traverse():
+    # use recursion: max stack depth: 1000 in python
+    # re-calculate: don't save forward array for backward? 
+    # loop from layer1 to layer n: (recursion)
+    #    output = None
+    #    forward(input,matrix,output)
+    #    # backward(matrix,output)
+    pass
 
 def test():
     np.random.seed(1337)
@@ -38,9 +71,11 @@ def test():
     print(w1.weight,"\n\n", w2.weight,"\n\n")
     f1 = in1.weight @ w1.weight
     b1 = g.weight @ (w2.weight.T)
+    # as layers
     postorder(g.weight,f1,w2,lr)
     postorder(b1,in1.weight,w1,lr)
     print(w1.weight,"\n\n", w2.weight)
+    # as a model:: modify postorder() to traverse()
 
 
 class Linear(Tensor):
