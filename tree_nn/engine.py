@@ -4,16 +4,8 @@ import numpy as np
 def layer_init(row, col):
     return np.random.uniform(-1., 1., size=(row, col))/np.sqrt(row*col)
 
-# use recursion
-# forward pass: postorder
-# backprop: preorder
 # instead of saving forward passes to each layer
 # , we calculate the matrices every time
-
-def postorder(grad,fpass,layer,lr): # void
-    d_weight = fpass.T @ grad
-    grad = grad @ (layer.weight.T)
-    layer.weight -= lr*d_weight
 
 # layers
 class Tensor:
@@ -38,10 +30,9 @@ def mse(yhat,y):
 
 def train(inputs,matrix,output,lossfn=None,lr=1e-4):
     # model as tree (degenerate to linkedlist sometimes), lossfn: root node
-    # output: result(label?) and receive gradient
+    # output: result(init: label) and receive gradient
     if matrix is None: # change to child when scale up
         # return gradient from loss function
-        # return
         _, output = lossfn(inputs,output)
         return
     # forward pass, count epoch
