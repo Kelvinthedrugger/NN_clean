@@ -25,41 +25,34 @@ class Tensor:
         else:
             self.weight = weight
 
+        # prototype of child[]
+        self.link = None
+        
         # previous layers, don't need parent since we use tree traversals
         self.child = []
 
-def backward(fpass,matrix,bpass,lr,lossfn):
-    if matrix.link == None: # lossfn
-        bpass = lossfn()
-    d_weight = fpass.T @ bpass
-    matrix.weight -= lr * d_weight
-    bpass = bpass @ (matrix.weight.T)
+def mse(yhat,y):
+    loss = np.sum(np.square(yhat-y)) # scalar
+    grad = 2*np.mean(np.subtract(yhat,y),axis=1) # vector
+    return loss.mean(), grad
 
-
-def forward(inputs,matrix,output,lr=1e-4,lossfn=None):
-    # model as tree (degenerate to linkedlist sometimes)
-
-    # last node of model: lossfn
-    if matrix.link == None:
-        # last layer: forward pass are all done
-        # receive gradient from loss function
-        backward(inputs,matrix,output,lr,lossfn)
+def train(inputs,matrix,output,lr=1e-4,lossfn=None,count=0,epochs=0):
+    # model as tree (degenerate to linkedlist sometimes), lossfn: root node
+    if count == 2*epoch:
         return
-    # output: result and receive gradient
-    output = inputs @ matrix.weight
-    forward(output,matrix.link,output,lr,lossfn)
-    # execute after forward pass are done and not the last layer
-    backward(inputs,matrix,output,lr,lossfn)
+    # output: result(label?) and receive gradient
+    if matrix.link is None: # change to child when scale up
+        # return gradient from loss function
+        _, output = lossfn()
+        epoch = 2 * count # might be buggy for multiple input layer (leaf node)
+    else:
+        # forward pass, count epoch
+        train(inputs @matrix.weight,matrix.link,output,lr,lossfn,count+1,epochs)
 
+    # backprop and gradient descent 
+    matrix.weight -= lr * fpass.T @ output
+    output = output @ (matrix.weight.T)
 
-def traverse():
-    # use recursion: max stack depth: 1000 in python
-    # re-calculate: don't save forward array for backward? 
-    # loop from layer1 to layer n: (recursion)
-    #    output = None
-    #    forward(input,matrix,output)
-    #    # backward(matrix,output)
-    pass
 
 def test():
     np.random.seed(1337)
@@ -75,8 +68,9 @@ def test():
     postorder(g.weight,f1,w2,lr)
     postorder(b1,in1.weight,w1,lr)
     print(w1.weight,"\n\n", w2.weight)
-    # as a model:: modify postorder() to traverse()
 
+    # not tested yet
+    # train()
 
 class Linear(Tensor):
     def __init__(self,h=1,w=1,weight=None):
