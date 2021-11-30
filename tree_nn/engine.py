@@ -28,6 +28,11 @@ def mse(yhat,y):
     grad = 2*np.subtract(yhat,y)#.mean(axis=1) # vector
     return loss.mean(), grad
 
+def relu(x):
+    fpass = np.maximum(x,0)
+    bpass = (fpass > 0).astype(np.float32)
+    return fpass, bpass
+
 def train(inputs,matrix,output,lossfn=None,lr=1e-4):
     # model as tree (degenerate to linkedlist sometimes), lossfn: root node
     # output: result(init: label) and receive gradient
@@ -35,22 +40,26 @@ def train(inputs,matrix,output,lossfn=None,lr=1e-4):
         # return gradient from loss function
         _, output = lossfn(inputs,output)
         return
+    # activation
+    fpass, bpass = relu(inputs @ matrix.weight)
     # forward pass, count epoch
-    train(inputs @matrix.weight,matrix.link,output,lossfn,lr)
+    train(fpass,matrix.link,output,lossfn,lr)
 
     # backprop and gradient descent 
-    matrix.weight -= lr * (inputs @ matrix.weight).T @ output
+    matrix.weight -= lr * (fpass).T @ np.multiply(output,bpass)
     output = output @ (matrix.weight.T)
 
 def test2():
-    # worked
+    # depend on init weight very much 
     x = np.array([3,1,2,4,2],dtype=np.float32)
     y = np.array([0,1,0,0,0],dtype=np.float32)
     mat = Tensor(5,5)
-    for i in range(20):
-        train(x,mat,y,mse,lr=1e-5)
-        #print("epoch: ",i+1, norm: ",mat.weight.sum(),)
-    print("x:\n",x,"\n\nxhat:\n",x @ mat.weight,"\n\ny: ",y)
+    for i in range(50):
+        train(x,mat,y,mse,lr=1e-4)
+        if i % 10 == 9:
+            print("epoch: ",i+1," norm: ",mat.weight.sum(),end="   ")
+            print("loss: ",mse(x @ mat.weight,y)[0].sum())
+    print("x:\n",x,"\n\nyhat:\n",x @ mat.weight,"\n\ny: ",y)
 
 def test():
     np.random.seed(1337)
