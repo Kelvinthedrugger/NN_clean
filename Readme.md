@@ -42,6 +42,10 @@ Result:
 
 # Progress
 
-    # branch on_cloud works on colab!
+    # NN_clean works on colab!
 
     !git clone https://github.com/Kelvinthedrugger/NN_clean.git
+
+
+    # To see another architecture with a lot less memory, checkout ./tree_nn
+
