@@ -2,7 +2,7 @@
 import numpy as np
 
 def layer_init(row, col):
-    return np.random.uniform(-1., 1., size=(row, col))/np.sqrt(row*col)
+    return np.random.uniform(-1., 1., size=(row, col))/np.sqrt(row*col).astype(np.float32)
 
 # layers
 class Tensor:
@@ -54,7 +54,11 @@ def train(inputs,output,layer,lossfn=None,lr=1e-4):
         return
 
     # activation
-    fpass, bpass = layer.act(inputs @ layer.weight)
+    if layer.act is not None:
+        fpass, bpass = layer.act(inputs @ layer.weight)
+    else:
+        fpass = inputs @ layer.weight
+        bpass = 1 # np.eye(fpass.shape[0],fpass.shape[1])
 
     # forward pass, count epoch
     train(fpass,output,layer.link,lossfn,lr)
@@ -78,7 +82,6 @@ def test():
             print("yhat: ",x1 @ w1.weight,end=" ")
             print("norm: %.4f, loss: %.4f" % (w1.weight.sum(),mse(x1 @ w1.weight, y1)[0].mean()))
 
-
 """
 # Loss:: root of the model, also a node of tree
 class Lossfn:
@@ -89,5 +92,8 @@ class Lossfn:
     def forward(self,x):
         pass
 """
+class LSTM(Linear):
+    pass
+
 if __name__ == "__main__":
     test()
