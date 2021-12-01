@@ -13,9 +13,9 @@ Best performance:
  test time: 0.0364 sec
 
 
-To see how complex topo works on random & mnist dataset, directly run:
+To see how complex topo works on random & mnist dataset, checkout:
 
-    python model_topo.py
+   ./nn/topo.py 
 
 Result:
 
@@ -39,6 +39,7 @@ Result:
 
     working on enabling usage on online notebook: done; see Progress &topo_on_cloud.py
 
+    implementation in language C: >> git checkout C
 
 # Progress
 
