@@ -50,7 +50,7 @@ def sigmoid(xx):  # slow
 # instead of saving forward passes to each layer
 # , we calculate the matrices every time
 
-def train(inputs,output,layer,lossfn=None,lr=1e-4):
+def train(inputs,output,layer,lossfn=None,lr=1e-4,grad=None):
 
     # change to child when scale up
     if layer is None: 
@@ -65,25 +65,29 @@ def train(inputs,output,layer,lossfn=None,lr=1e-4):
         fpass = inputs @ layer.weight
         bpass = 1 # np.eye(fpass.shape[0],fpass.shape[1])
 
-    # forward pass, count epoch
+    # forward pass
     train(fpass,output,layer.link,lossfn,lr)
-
+    
     # gradient descent & update weight
     if layer.trainable:
-        layer.weight -= lr * (fpass).T @ np.multiply(output,bpass)
+        print("weight: ",layer.weight)
+        print("output",output.shape,"layer",layer.weight.shape,"fp",fpass.shape,"bpass",bpass.shape)
+        layer.weight -= lr * (inputs).T @ np.multiply(output,bpass)
 
     # backprop
-    output = output @ (layer.weight.T)
+    # no way to change values w/o return like how C does?
+    output = output @ (layer.weight.T) # not passed
+    print("output after bkprop",output.shape)
 
 def test():
-    w1 = Linear(5,5)
+    w1 = Linear(5,2)
     w1.act = relu
-    w2 = Linear(5,5)
+    w2 = Linear(2,5)
     w2.act = sigmoid
     w1.link = w2
-
-    x1 = np.array([1,2,3,2,1],dtype=np.float32)
-    y1 = np.array([0,0,1,0,0],dtype=np.float32)
+    print("w1\n",w1.weight,"\nw2\n",w2.weight)
+    x1 = np.array([[1,2,3,2,1]],dtype=np.float32)
+    y1 = np.array([[0,0,1,0,0]],dtype=np.float32)
     
     for i in range(100):
         train(x1,y1,w1,mse,lr=1e-4)
