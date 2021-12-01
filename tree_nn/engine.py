@@ -4,24 +4,31 @@ import numpy as np
 def layer_init(row, col):
     return np.random.uniform(-1., 1., size=(row, col))/np.sqrt(row*col)
 
-# instead of saving forward passes to each layer
-# , we calculate the matrices every time
-
 # layers
 class Tensor:
     # abstraction: to be inherited
-    # every object as Tensor object?
-    def __init__(self,h=1,w=1,weight=None):
-        if weight is None:
-            self.weight = layer_init(h,w)
-        else:
-            self.weight = weight
+    # every object as Tensor object, not just layers but also lossfn
+    def __init__(self):
 
         # prototype of child[]
         self.link = None
         
         # previous layers, don't need parent since we use tree traversals
         self.child = []
+
+class Linear(Tensor):
+    def __init__(self,h=1,w=1,weight=None):
+        super().__init__()
+
+        if weight is None:
+            self.weight = layer_init(h,w)
+        else:
+            self.weight = weight
+        
+        # activation function
+        self.act = None
+
+        self.trainable = True
 
 def mse(yhat,y):
     loss = np.square(yhat-y) # scalar
@@ -33,52 +40,45 @@ def relu(x):
     bpass = (fpass > 0).astype(np.float32)
     return fpass, bpass
 
-def train(inputs,matrix,output,lossfn=None,lr=1e-4):
-    # model as tree (degenerate to linkedlist sometimes), lossfn: root node
-    # output: result(init: label) and receive gradient
-    if matrix is None: # change to child when scale up
+# model as tree (degenerate to linkedlist sometimes), lossfn: root node
+# output: result(init: label) and receive gradient
+# instead of saving forward passes to each layer
+# , we calculate the matrices every time
+
+def train(inputs,output,layer,lossfn=None,lr=1e-4):
+
+    # change to child when scale up
+    if layer is None: 
         # return gradient from loss function
         _, output = lossfn(inputs,output)
         return
+
     # activation
-    fpass, bpass = relu(inputs @ matrix.weight)
+    fpass, bpass = layer.act(inputs @ layer.weight)
+
     # forward pass, count epoch
-    train(fpass,matrix.link,output,lossfn,lr)
+    train(fpass,output,layer.link,lossfn,lr)
 
-    # backprop and gradient descent 
-    matrix.weight -= lr * (fpass).T @ np.multiply(output,bpass)
-    output = output @ (matrix.weight.T)
+    # gradient descent & update weight
+    if layer.trainable:
+        layer.weight -= lr * (fpass).T @ np.multiply(output,bpass)
 
-def test2():
-    # depend on init weight very much 
-    x = np.array([3,1,2,4,2],dtype=np.float32)
-    y = np.array([0,1,0,0,0],dtype=np.float32)
-    mat = Tensor(5,5)
-    for i in range(50):
-        train(x,mat,y,mse,lr=1e-4)
-        if i % 10 == 9:
-            print("epoch: ",i+1," norm: ",mat.weight.sum(),end="   ")
-            print("loss: ",mse(x @ mat.weight,y)[0].sum())
-    print("x:\n",x,"\n\nyhat:\n",x @ mat.weight,"\n\ny: ",y)
+    # backprop
+    output = output @ (layer.weight.T)
 
 def test():
-    np.random.seed(1337)
-    in1 = Tensor(1,2) # col vector .T
-    lr = 1e-3
-    w1 = Tensor(2,3)
-    w2 = Tensor(3,2)
-    g = Tensor(1,2)
-    print(w1.weight,"\n\n", w2.weight,"\n\n")
-    f1 = in1.weight @ w1.weight
-    b1 = g.weight @ (w2.weight.T)
-    # as layers
-    postorder(g.weight,f1,w2,lr)
-    postorder(b1,in1.weight,w1,lr)
-    print(w1.weight,"\n\n", w2.weight)
+    w1 = Linear(5,5)
+    w1.act = relu
+    x1 = np.array([1,2,3,2,1],dtype=np.float32)
+    y1 = np.array([0,0,1,0,0],dtype=np.float32)
+    
+    for i in range(100):
+        train(x1,y1,w1,mse,lr=1e-4)
+        if i % 20 == 9:
+            print("yhat: ",x1 @ w1.weight,end=" ")
+            print("norm: %.4f, loss: %.4f" % (w1.weight.sum(),mse(x1 @ w1.weight, y1)[0].mean()))
 
-class Linear(Tensor):
-    def __init__(self,h=1,w=1,weight=None):
-        super().__init__()
+
 """
 # Loss:: root of the model, also a node of tree
 class Lossfn:
@@ -90,4 +90,4 @@ class Lossfn:
         pass
 """
 if __name__ == "__main__":
-    test2()
+    test()
