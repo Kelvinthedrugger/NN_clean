@@ -40,6 +40,11 @@ def relu(x):
     bpass = (fpass > 0).astype(np.float32)
     return fpass, bpass
 
+def sigmoid(xx):  # slow
+    S = np.array(list(map(lambda x: 1/(1+np.exp(-x)), xx)))
+    return S, np.multiply(S, (1-S))
+
+
 # model as tree (degenerate to linkedlist sometimes), lossfn: root node
 # output: result(init: label) and receive gradient
 # instead of saving forward passes to each layer
@@ -73,14 +78,18 @@ def train(inputs,output,layer,lossfn=None,lr=1e-4):
 def test():
     w1 = Linear(5,5)
     w1.act = relu
+    w2 = Linear(5,5)
+    w2.act = sigmoid
+    w1.link = w2
+
     x1 = np.array([1,2,3,2,1],dtype=np.float32)
     y1 = np.array([0,0,1,0,0],dtype=np.float32)
     
     for i in range(100):
         train(x1,y1,w1,mse,lr=1e-4)
         if i % 20 == 9:
-            print("yhat: ",x1 @ w1.weight,end=" ")
-            print("norm: %.4f, loss: %.4f" % (w1.weight.sum(),mse(x1 @ w1.weight, y1)[0].mean()))
+            print("yhat: ",x1 @ w1.weight @ w2.weight,end=" ")
+            print("norm: %.4f, loss: %.4f" % (w1.weight.sum()+w2.weight.sum(),mse(x1 @ w1.weight @ w2.weight, y1)[0].mean()))
 
 """
 # Loss:: root of the model, also a node of tree
@@ -93,7 +102,11 @@ class Lossfn:
         pass
 """
 class LSTM(Linear):
-    pass
+
+    def __init__(self):
+        super().__init__()
+
+
 
 if __name__ == "__main__":
     test()
