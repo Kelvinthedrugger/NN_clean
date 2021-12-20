@@ -29,6 +29,10 @@ class Linear(Tensor):
         self.act = None
 
         self.trainable = True
+        
+        # save for backward
+        self.bpass = None
+
 
 def mse(yhat,y):
     loss = np.square(yhat-y) # scalar
@@ -43,6 +47,24 @@ def relu(x):
 def sigmoid(xx):  # slow
     S = np.array(list(map(lambda x: 1/(1+np.exp(-x)), xx)))
     return S, np.multiply(S, (1-S))
+
+# Loss:: root of the model, also a node of tree
+class Lossfn(Tensor):
+    # abstraction: to be inherited
+    def __init__(self):
+        super().__init__()
+
+    def mse(self,yhat,y):
+        loss = np.square(np.subtract(yhat,y)) # scalar
+        grad = 2*np.subtract(yhat,y)#.mean(axis=1) # vector
+        return loss.mean(), grad
+
+
+# treat loss as root node
+# void fun'n
+def forward_backward(x,y,node,lr=1e-4):
+    # loss function
+    pass
 
 
 # model as tree (degenerate to linkedlist sometimes), lossfn: root node
@@ -76,7 +98,7 @@ def train(inputs,output,layer,lossfn=None,lr=1e-4,grad=None):
 
     # backprop
     # no way to change values w/o return like how C does?
-    output = output @ (layer.weight.T) # not passed
+    output = output @ (layer.weight.T) # gradient not passed
     print("output after bkprop",output.shape)
 
 def test():
@@ -95,21 +117,10 @@ def test():
             print("yhat: ",x1 @ w1.weight @ w2.weight,end=" ")
             print("norm: %.4f, loss: %.4f" % (w1.weight.sum()+w2.weight.sum(),mse(x1 @ w1.weight @ w2.weight, y1)[0].mean()))
 
-"""
-# Loss:: root of the model, also a node of tree
-class Lossfn:
-    # abstraction: to be inherited
-    def __init__(self):
-        self.child = []
-
-    def forward(self,x):
-        pass
-"""
 class LSTM(Linear):
 
     def __init__(self):
         super().__init__()
-
 
 
 if __name__ == "__main__":
