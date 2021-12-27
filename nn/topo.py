@@ -1,3 +1,4 @@
+from nn.module import layer_init
 
 class Activations:
     def __init__(self):

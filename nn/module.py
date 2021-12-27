@@ -118,16 +118,6 @@ class Sequential:
                         f.write("\n\n")
             f.close()
 
-
-class Model:
-    def __init__(self):
-        """
-        construct topo available model here
-        , consider started from layer class
-        """
-        pass
-
-
 class Loss:
     def mse(self, y, yhat, supervised=True, num_class=10):
         """read num_class when supervised"""
@@ -172,3 +162,4 @@ class Optimizer:
             tmp = layer.weight
             # current weight
             layer.weight -= self.learning_rate*mhat/(vhat**0.5+eps)
+

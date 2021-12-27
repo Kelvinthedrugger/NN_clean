@@ -1,24 +1,18 @@
 
-
 if __name__ == "__main__":
-    # from module import layer_init, Loss, Optimizer
-    # from model_topo import ReLU, Layer
-    from nn.module import layer_init, Loss, Optimizer
+    from nn.module import Loss, Optimizer
     from nn.topo import ReLU, Layer
     import numpy as np
 
     # on mnist
     from fetch_it import mnist
     x_train, y_train, x_test, y_test = mnist()
-    """
+
     layer3 = Layer(784, 128)
     act = ReLU()
     layer4 = Layer(128, 10)
-    """
-    layer3 = Layer(weight=layer_init(784, 128))
-    act = ReLU()
-    layer4 = Layer(weight=layer_init(128, 10))
 
+    # build model
     layer4(act(layer3))
 
     lossfn = Loss().crossentropy
@@ -26,6 +20,7 @@ if __name__ == "__main__":
 
     batch_size = 128
     mnist_loss = {"loss": [], "val_loss": []}
+
     from time import time
     start = time()
     for epoch in range(2):
@@ -47,6 +42,7 @@ if __name__ == "__main__":
     end = time()
 
     from matplotlib.pyplot import plot, show, title, legend, xlabel, ylabel
+
     print("time spent: %.4f" % (end-start))
     print("loss: %.4f, val_loss: %.4f" %
           (mnist_loss["loss"][-1], mnist_loss["val_loss"][-1]))
@@ -57,3 +53,4 @@ if __name__ == "__main__":
     xlabel("num of batched data")
     ylabel("loss")
     show()
+
