@@ -8,4 +8,5 @@ traversal:
     forward pass: postorder 
         backprop: preorder
 
+ adopt *args, **kwargs
 
