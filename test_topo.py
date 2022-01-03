@@ -1,3 +1,5 @@
+# deprecated, not useful
+# it's a experiment template rather
 import module as nn
 import numpy as np
 """haven't invoke topo so far"""
