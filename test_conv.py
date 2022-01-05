@@ -1,6 +1,8 @@
 from nn.module import layer_init, Loss, Optimizer
 import numpy as np
 
+# we have shape problem going on, refactor backwards
+
 class Conv:
     def __init__(self, filters, kernel_size, stride=1, padding=None):
         self.filters = filters
