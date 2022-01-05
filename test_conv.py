@@ -2,8 +2,6 @@ from nn.module import layer_init, Loss, Optimizer
 import numpy as np
 from matplotlib import pyplot as plt
 
-# we have shape problem going on, refactor backwards
-
 class Conv:
     def __init__(self, filters, kernel_size, stride=1, padding=None):
         self.filters = filters
@@ -41,6 +39,8 @@ class Conv:
     def backwards(self,bpass,optim):
         if self.trainable:
            tmpker = np.zeros(self.weight.shape, dtype=np.float32)
+           ks = self.kernel_size
+           st = self.stride
            for r in range(self.filters):
               # calculate grad wrt filters
               tmpgrad = self.forward[r].T @ bpass[r]
@@ -50,9 +50,8 @@ class Conv:
               plt.subplot(1,2,2)
               plt.imshow(bpass[0])
               plt.show()
-              ks = self.kernel_size
-              for k in range(0, (self.forward[r].shape[0]-self.kernel_size)//1+1, self.kernel_size):
-                  for m in range(0, (self.forward[r].shape[1]-self.kernel_size)//1+1, self.kernel_size):
+              for k in range(0, (self.forward[r].shape[0]-self.kernel_size)//st+1, self.kernel_size):
+                  for m in range(0, (self.forward[r].shape[1]-self.kernel_size)//st+1, self.kernel_size):
                       tmpker[r] += tmpgrad[k:k+ks, m:m+ks]
 
               self.grad = tmpker
