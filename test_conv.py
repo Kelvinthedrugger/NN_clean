@@ -1,6 +1,5 @@
-from nn.module import layer_init, Tensor, Loss, Optimizer
+from nn.module import layer_init, Loss, Optimizer
 import numpy as np
-
 
 class Conv:
     def __init__(self, filters, kernel_size, stride=1, padding=None):
