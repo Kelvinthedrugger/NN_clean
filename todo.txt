@@ -1,4 +1,11 @@
 
+
+add Conv layer
+  __call__() for child/gradient pass
+  forward()
+  backward()
+
+
  open a folder named "trees" & rewrite neural engine based on tree
 traversal:
  

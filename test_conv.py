@@ -16,7 +16,13 @@ class Conv:
         self.grad = np.zeros_like(weight)  # zeros with same shape as weight
         self.trainable = True
 
-    def __call__(self, x):
+        self. child = None
+
+    def __call__(self,layer):
+        self.child = layer
+        return layer
+
+    def forwards(self, x):
         rows, cols = x.shape
         out = np.zeros((self.filters, rows, cols), dtype=np.float32)
         for r in range(self.filters):
@@ -27,6 +33,20 @@ class Conv:
                     out[r, k, m] = ret.sum()
         return out
 
+    def backwards(self,bpass,optim):
+        if self.trainable:
+            tmpgrad = (x.T @ gradient).reshape((28, 28))
+            # do conv update
+            tmpker = np.zeros((3, 3), dtype=np.float32)
+            for r in range(1):
+                for k in range(0, (x.shape[0]-3)//1+1, 3):
+                    for m in range(0, (x.shape[1]-3)//1+1, 3):
+                        tmpker += tmpgrad[k:k+3, m:m+3]
+            layer.grad = tmpker
+            optim(layer)
+            # copy from below main() 
+        if self.child is not None:
+            self.child.backwards(bpass,optim)
 
 if __name__ == "__main__":
     np.random.seed(1337)
@@ -45,10 +65,12 @@ if __name__ == "__main__":
     out = None
     for _ in range(10):
         # forward pass
-        out = layer(x)
+        out = layer.forwards(x)
         assert out.shape == (1, 28, 28)
         # backprop
         loss, gradient = lossfn(x, out, supervised=False)
+        layer.backwards(gradient,optim)
+        """
         tmpgrad = (x.T @ gradient).reshape((28, 28))
         # do conv update
         tmpker = np.zeros((3, 3), dtype=np.float32)
@@ -57,7 +79,7 @@ if __name__ == "__main__":
                 for m in range(0, (x.shape[1]-3)//1+1, 3):
                     tmpker += tmpgrad[k:k+3, m:m+3]
         layer.grad = tmpker
-        optim(layer)
+        optim(layer)"""
         losses.append(loss.mean())
 
     print("epoch  loss")
