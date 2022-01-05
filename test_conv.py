@@ -13,7 +13,7 @@ class Conv:
         self.weight = weight
         self.stride = stride
         self.padding = padding  # bool
-        # similar to Tensor
+        # similar to Tensor, can be replaced by inheriting from class Layer
         self.forward = None
         self.grad = np.zeros_like(weight)  # zeros with same shape as weight
         self.trainable = True
@@ -37,16 +37,15 @@ class Conv:
 
     def backwards(self,bpass,optim):
         if self.trainable:
+            # do conv update, slow, in pure python
             tmpgrad = (x.T @ gradient).reshape((28, 28))
-            # do conv update
-            tmpker = np.zeros((3, 3), dtype=np.float32)
+            tmpker = np.zeros((self.kernel_size, self.kernel_size), dtype=np.float32)
             for r in range(1):
-                for k in range(0, (x.shape[0]-3)//1+1, 3):
-                    for m in range(0, (x.shape[1]-3)//1+1, 3):
-                        tmpker += tmpgrad[k:k+3, m:m+3]
+                for k in range(0, (x.shape[0]-self.kernel_size)//1+1, self.kernel_size):
+                    for m in range(0, (x.shape[1]-self.kernel_size)//1+1, self.kernel_size):
+                        tmpker += tmpgrad[k:k+self.kernel_size, m:m+self.kernel_size]
             layer.grad = tmpker
             optim(layer)
-            # copy from below main() 
         if self.child is not None:
             self.child.backwards(bpass,optim)
 
