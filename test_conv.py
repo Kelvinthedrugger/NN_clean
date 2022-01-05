@@ -70,16 +70,6 @@ if __name__ == "__main__":
         # backprop
         loss, gradient = lossfn(x, out, supervised=False)
         layer.backwards(gradient,optim)
-        """
-        tmpgrad = (x.T @ gradient).reshape((28, 28))
-        # do conv update
-        tmpker = np.zeros((3, 3), dtype=np.float32)
-        for r in range(1):
-            for k in range(0, (x.shape[0]-3)//1+1, 3):
-                for m in range(0, (x.shape[1]-3)//1+1, 3):
-                    tmpker += tmpgrad[k:k+3, m:m+3]
-        layer.grad = tmpker
-        optim(layer)"""
         losses.append(loss.mean())
 
     print("epoch  loss")
