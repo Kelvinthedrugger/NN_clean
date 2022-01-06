@@ -8,7 +8,7 @@ class Conv:
         self.filters = filters
         self.kernel_size = kernel_size
         # slow in pure python
-        # fast: np.random.uniform(filters,rows,cols)
+        # fast: np.random.uniform(filters,rows,cols)?
         weight = np.zeros((filters, kernel_size, kernel_size))
         for r in range(filters):
             weight[r, :, :] = layer_init(kernel_size, kernel_size)
@@ -60,7 +60,7 @@ class Conv:
                   for m in range(0, (self.forward[r].shape[1]-ks)//st+1, ks):
                       tmpker[r] += tmpgrad[k:k+ks, m:m+ks]
 
-              self.grad = tmpker
+              self.grad[r] = tmpker[r]
            # update backward pass before update the weight
            #print(bpass.shape, self.weight.shape)
            #bpass = bpass @ self.weight
