@@ -59,3 +59,75 @@ class Layer:
         bpass = bpass @ (self.weight.T)
         if self.child is not None:
             self.child.backwards(bpass, optim)
+
+class Conv:
+    def __init__(self, filters, kernel_size, stride=1, padding=False):
+      self.filters = filters
+      self.ks = kernel_size
+
+      # fast in built-in, consider merge in layer_init()
+      weight = np.random.uniform(-1., 1.,size=(filters,kernel_size,kernel_size))/np.sqrt(kernel_size**2)
+      self.weight = weight.astype(np.float32)
+
+      self.st = stride
+      self.padding = padding  # bool
+
+      # similar to Tensor, can be replaced by inheriting from class Layer
+      self.forward = None
+      self.grad = np.zeros(weight.shape)  # zeros with same shape as weight
+      self.trainable = True
+
+      self.child = None
+
+    def __call__(self,layer):
+      self.child = layer
+      return layer
+
+    def forwards(self, x): 
+      ks = self.ks
+      st = self.st
+      # output[0]: batchsize -> No. of filter
+      out = np.zeros((self.filters,x.shape[1],x.shape[2]))
+      for r in range(self.filters):
+        for k in range(0, (x.shape[1]-ks) + 1, st):
+          for m in range(0, (x.shape[2]-ks) + 1, st):
+            tmp = x[:, k:k+ks, m:m+ks]
+            ret = np.multiply(self.weight[r], tmp)
+            out[r, k, m] = ret.sum()
+
+      # forward pass: return the x' = layer(x)
+      # x is put here to pass compile
+      self.forward = out 
+      return out 
+
+    def backwards(self,bpass,optim):
+      # d_weight = forward.T @ bpass
+      ks = self.ks
+      st = self.st
+      rk = self.forward.shape[1]
+      rm = self.forward.shape[2]
+      # will all the filters learned exactly
+      # the same features ? ans: no, see bottom for visualization
+      for r in range(self.filters):
+        # calculate the grad of each filter
+        tmpgrad = self.forward[r].T @ bpass[r] 
+        tmpout = np.zeros((3,3))
+        for k in range(0, rk, st):
+          for m in range(0, rm, st):
+            tmpout += tmpgrad[k:ks+k, m:ks+k].sum()
+        self.grad[r] += tmpout
+
+      # pass the grad to the front first
+      # bpass = bpass @ (weight.T)
+      # difficult
+      # fpass: grid formed by where center of filter has passed
+      #  on self.forwards
+      # bpass = bpass * fpass
+
+      # update the weights at once
+      optim(self)
+
+      # call child for model backprop later
+      # self.child.backwards()
+
+
