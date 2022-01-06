@@ -4,4 +4,6 @@ __pycache__
 *.py.un~
 *.md.un~
 .gitignore
+*.py.swp
+*..py.swp
 
