@@ -95,17 +95,17 @@ if __name__ == "__main__":
     x = np.concatenate(
         [[[ele]*4 for ele in row]*4 for row in x]).reshape(28, 28)
     # layer init
-    layer = Conv(filters=1, kernel_size=3)  # filters=1 means nothing
+    layer = Conv(filters=1, kernel_size=3,stride=3)  # filters=1 means nothing
     lossfn = Loss().mse
     optim = Optimizer(learning_rate=5e-5).SGD
     # training loop
     losses = []
     out = None
     print(layer.weight)
-    for _ in range(1):
+    for _ in range(10):
         # forward pass
         out = layer.forwards(x)
-        assert out.shape == (1, 28, 28)
+        assert out[0].shape == (28, 28)
         # backprop
         loss, gradient = lossfn(x, out, supervised=False)
         layer.backwards(gradient,optim)
@@ -115,7 +115,6 @@ if __name__ == "__main__":
     for i in range(len(losses)):
         print("%d      %.4f" % (i, losses[i]))
 
-    """
 
     #plt.figure(figsize=(5, 10))
     plt.subplot(1, 2, 1)
@@ -124,4 +123,4 @@ if __name__ == "__main__":
     plt.subplot(1, 2, 2)
     plt.imshow(out.reshape(28, 28))
     plt.title("forward pass after training")
-    plt.show()"""
+    plt.show()
