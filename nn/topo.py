@@ -1,5 +1,7 @@
-from nn.module import layer_init
 import numpy as np
+
+def layer_init(row, col):
+    return np.random.uniform(-1., 1., size=(row, col))/np.sqrt(row*col)
 
 class Activations:
     def __init__(self):
