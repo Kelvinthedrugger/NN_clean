@@ -29,12 +29,12 @@ class Conv:
     def forwards(self, x): 
       ks = self.ks
       st = self.st
-      # out = np.zeros((self.filters,(x.shape[1]-ks)//st + 1, (x.shape[2]-ks)//st + 1))
-      out = np.zeros(x.shape)
+      # output[0]: batchsize -> No. of filter
+      out = np.zeros((self.filters,x.shape[1],x.shape[2]))
       for r in range(self.filters):
-        for k in range(0, (x.shape[1]-ks)//st + 1, st):
-          for m in range(0, (x.shape[1]-ks)//st + 1, st):
-            tmp = x[r, k:k+ks, m:m+ks]
+        for k in range(0, (x.shape[1]-ks) + 1, st):
+          for m in range(0, (x.shape[2]-ks) + 1, st):
+            tmp = x[:, k:k+ks, m:m+ks]
             ret = np.multiply(self.weight[r], tmp)
             out[r, k, m] = ret.sum()
 
@@ -43,20 +43,14 @@ class Conv:
       self.forward = out 
       return out 
 
-    # calculate gradient only, don't update the weights here first
-    # , then make use of self.child and update the weights 
-    # right after gradient is calculated
-    # pass back the grad -> calculate d_weight -> update weight -= lr*d_weight
     def backwards(self,bpass,optim=Optimizer().SGD):
-
-      # calc. the d_weight
       # d_weight = forward.T @ bpass
       ks = self.ks
       st = self.st
       rk = self.forward.shape[1]
       rm = self.forward.shape[2]
       # will all the filters learned exactly
-      # the same features ?
+      # the same features ? ans: no, see bottom for visualization
       for r in range(self.filters):
         # calculate the grad of each filter
         tmpgrad = self.forward[r].T @ bpass[r] 
@@ -87,7 +81,7 @@ if __name__ == "__main__":
       [[0, 0, 1, 1, 1, 0, 0], [0, 0, 1, 0, 0, 0, 0], [0, 0, 1, 1, 1, 0, 0], [0, 0, 0, 0, 0, 1, 0], [0, 0, 0, 0, 0, 1, 0], [0, 0, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0]])
   x = np.concatenate(
       [[[ele]*4 for ele in row]*4 for row in x]).reshape(1, 28, 28)
-  layer = Conv(filters=1, kernel_size=3,stride=2)
+  layer = Conv(filters=3, kernel_size=3,stride=2)
   lossfn = Loss().mse
   opt = Optimizer(1e-6).SGD
 
@@ -97,14 +91,26 @@ if __name__ == "__main__":
    out = layer.forwards(x)
 
    loss, grad = lossfn(out,x,supervised=False)
-   losses.append(loss.mean())
    layer.backwards(grad,opt)
+
+   losses.append(loss.mean())
  
-  print(losses)
-  plt.subplot(1,3,1)
+  for i in range(len(losses)):
+    print("epoch: %d, loss: %.4f" % (i, losses[i]))
+  """
+  # input/output
+  plt.subplot(1,2,1)
   plt.imshow(x[0])
-  plt.subplot(1,3,2)
+  plt.subplot(1,2,2)
   plt.imshow(out[0])
-  plt.subplot(1,3,3)
-  plt.imshow(layer.weight[0] * 100 + 100)
   plt.show()
+  """
+  """
+  # filters
+  plt.subplot(1,3,1)
+  plt.imshow(layer.weight[0] * 100 + 100)
+  plt.subplot(1,3,2)
+  plt.imshow(layer.weight[1] * 100 + 100)
+  plt.subplot(1,3,3)
+  plt.imshow(layer.weight[2] * 100 + 100)
+  plt.show()"""

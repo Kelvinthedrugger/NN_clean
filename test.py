@@ -1,5 +1,5 @@
 from fetch_it import mnist
-import module as nn
+import nn.module as nn
 import numpy as np
 from matplotlib import pyplot as plt
 from time import time
@@ -42,4 +42,4 @@ if __name__ == "__main__":
     plt.title("Mnist")
     plt.show()
 
-    model.save(name="model_3.txt")
+    #model.save(name="model_3.txt")
