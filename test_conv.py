@@ -29,10 +29,12 @@ class Conv:
     def forwards(self, x):
         rows, cols = x.shape
         out = np.zeros((self.filters, rows, cols), dtype=np.float32)
+        ks = self.kernel_size
+        st = self.stride
         for r in range(self.filters):
-            for k in range(0, (rows-self.kernel_size)//self.stride + 1, self.stride):
-                for m in range(0, (cols-self.kernel_size)//self.stride+1, self.stride):
-                    tmp = x[k:k+self.kernel_size, m:m+self.kernel_size]
+            for k in range(0, (rows-ks)//st + 1, st):
+                for m in range(0, (cols-ks)//st+1, st):
+                    tmp = x[k:k+ks, m:m+ks]
                     ret = np.multiply(self.weight[r], tmp)
                     out[r, k, m] = ret.sum()
         # store forward pass in layer
@@ -54,8 +56,8 @@ class Conv:
               plt.subplot(1,2,2)
               plt.imshow(bpass[0])
               plt.show()"""
-              for k in range(0, (self.forward[r].shape[0]-self.kernel_size)//st+1, self.kernel_size):
-                  for m in range(0, (self.forward[r].shape[1]-self.kernel_size)//st+1, self.kernel_size):
+              for k in range(0, (self.forward[r].shape[0]-ks)//st+1, ks):
+                  for m in range(0, (self.forward[r].shape[1]-ks)//st+1, ks):
                       tmpker[r] += tmpgrad[k:k+ks, m:m+ks]
 
               self.grad = tmpker
