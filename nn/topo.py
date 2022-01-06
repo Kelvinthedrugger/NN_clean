@@ -87,6 +87,9 @@ class Conv:
       ks = self.ks
       st = self.st
       # output[0]: batchsize -> No. of filter
+      # not the real conv, which doesn't require padding
+      # try to remove padding when forward, and add padding
+      # when backward
       out = np.zeros((self.filters,x.shape[1],x.shape[2]))
       for r in range(self.filters):
         for k in range(0, (x.shape[1]-ks) + 1, st):
@@ -106,8 +109,7 @@ class Conv:
       st = self.st
       rk = self.forward.shape[1]
       rm = self.forward.shape[2]
-      # will all the filters learned exactly
-      # the same features ? ans: no, see bottom for visualization
+
       for r in range(self.filters):
         # calculate the grad of each filter
         tmpgrad = self.forward[r].T @ bpass[r] 
