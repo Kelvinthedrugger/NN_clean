@@ -5,6 +5,10 @@ add Conv layer
   forward()
   backward()
 
+  fix stride problem
+  fix number of filters problem
+  fix padding problem
+
 
  open a folder named "trees" & rewrite neural engine based on tree
 traversal:

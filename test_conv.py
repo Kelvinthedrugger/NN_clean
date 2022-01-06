@@ -1,11 +1,14 @@
 from nn.module import layer_init, Loss, Optimizer
 import numpy as np
 from matplotlib import pyplot as plt
+from nn.topo import ReLU
 
 class Conv:
     def __init__(self, filters, kernel_size, stride=1, padding=None):
         self.filters = filters
         self.kernel_size = kernel_size
+        # slow in pure python
+        # fast: np.random.uniform(filters,rows,cols)
         weight = np.zeros((filters, kernel_size, kernel_size))
         for r in range(filters):
             weight[r, :, :] = layer_init(kernel_size, kernel_size)
@@ -44,12 +47,13 @@ class Conv:
            for r in range(self.filters):
               # calculate grad wrt filters
               tmpgrad = self.forward[r].T @ bpass[r]
+              """
               print(self.forward.shape,bpass.shape)
               plt.subplot(1,2,1)
               plt.imshow(self.forward[0])
               plt.subplot(1,2,2)
               plt.imshow(bpass[0])
-              plt.show()
+              plt.show()"""
               for k in range(0, (self.forward[r].shape[0]-self.kernel_size)//st+1, self.kernel_size):
                   for m in range(0, (self.forward[r].shape[1]-self.kernel_size)//st+1, self.kernel_size):
                       tmpker[r] += tmpgrad[k:k+ks, m:m+ks]

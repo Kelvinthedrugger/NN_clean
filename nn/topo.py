@@ -1,4 +1,5 @@
 from nn.module import layer_init
+import numpy as np
 
 class Activations:
     def __init__(self):
