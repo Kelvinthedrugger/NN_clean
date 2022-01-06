@@ -1,4 +1,8 @@
 
+for model.save() method
+  1. go down very deep (from scratch)
+  2. use pickle library
+
 
 add Conv layer
   __call__() for child/gradient pass
