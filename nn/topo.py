@@ -54,9 +54,7 @@ class Optimizer:
             # current weight
             layer.weight -= self.learning_rate*mhat/(vhat**0.5+eps)
 
-class Layer:
-    """a qualified tensor based on tree structure, loss being the root node"""
-
+class Linear:
     def __init__(self, h=1, w=1, weight=None):
         if weight is None:
             self.weight = layer_init(h, w)
@@ -64,7 +62,6 @@ class Layer:
             self.weight = weight
         # topo
         self.child = None
-        # autograd
         self.forward = None  # save forward pass from previous layer
         self.grad = None  # d_layer
         self.trainable = True
@@ -119,8 +116,8 @@ class Conv:
       st = self.st
       # output[0]: batchsize -> No. of filter
       # not the real conv, which doesn't require padding
-      # try to remove padding when forward, and add padding
-      # when backward
+      # remove padding when forward, 
+      # and add padding when backward
       out = np.zeros((self.filters,x.shape[1],x.shape[2]))
       for r in range(self.filters):
         for k in range(0, (x.shape[1]-ks) + 1, st):
@@ -140,7 +137,6 @@ class Conv:
       rm = self.forward.shape[2]
 
       for r in range(self.filters):
-        # calculate the grad of each filter
         tmpgrad = self.forward[r].T @ bpass[r] 
         tmpout = np.zeros(self.weight[0].shape)
         for k in range(0, rk, st):
@@ -148,15 +144,4 @@ class Conv:
             tmpout += tmpgrad[k:ks+k, m:ks+k].sum()
         self.grad[r] += tmpout
 
-      # pass the grad to the front first
-      # difficult
-      # fpass: grid formed by where center of filter has passed
-      #  in self.forwards
-      # bpass = bpass * fpass
-
-      # update the weights at once
-      #optim(self)
-
-      # call child for model backprop later
-      # self.child.backwards()
 
