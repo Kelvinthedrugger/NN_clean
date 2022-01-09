@@ -25,7 +25,7 @@ def large():
 
   lossfn = Loss().mse
   opt = Optimizer(1e-1).SGD
-  batch_size = 24 
+  batch_size = 1#24 
 
   losses = []
   # training loop
@@ -112,5 +112,6 @@ def debug():
 
 if __name__ == "__main__":
   #np.random.seed(1337)
-  debug()
+  #debug()
+  large()
 
