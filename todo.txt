@@ -12,9 +12,14 @@ for model.save() method
 
 
 Layers:
-  
+
   LSTM
 
+  Flatten Layer: so that we can make use of Conv layer
+                  , and the gradient flow problem
+                  would affect not just image inference
+                  , but also RL and so on
+  
   Conv layer
     __call__() for child/gradient pass
     forward()
