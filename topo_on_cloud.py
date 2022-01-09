@@ -1,19 +1,19 @@
 # this file can be run directly on google colab since we don't use __init__ file
 if __name__ == "__main__":
     from nn.module import Loss, Optimizer
-    from nn.topo import ReLU, Layer
+    from nn.topo import ReLU, Linear
     import numpy as np
 
     # on mnist
     from fetch_it import mnist
     x_train, y_train, x_test, y_test = mnist()
 
-    layer3 = Layer(784, 128)
+    layer3 = Linear(784, 128)
     act = ReLU()
-    layer4 = Layer(128, 10)
+    layer4 = Linear(128, 10)
 
     # build model
-    # __call__(self,layer) in Layer probably causes bugs if we change layer4(..) to model = layer4(..) 
+    # __call__(self,layer) in Linear probably causes bugs if we change layer4(..) to model = layer4(..) 
     layer4(act(layer3))
 
     lossfn = Loss().crossentropy
