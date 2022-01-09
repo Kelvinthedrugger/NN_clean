@@ -1,17 +1,28 @@
 
+implement paper:
+  super-convergence: cycle learning rate
+
+
+perform experiments on implement dataset:
+  Mnist, Cifar's'
+
 for model.save() method
   1. go down very deep (from scratch)
   2. use pickle library
 
 
-add Conv layer
-  __call__() for child/gradient pass
-  forward()
-  backward()
+Layers:
+  
+  LSTM
 
-  fix stride problem
-  fix number of filters problem
-  fix padding problem
+  Conv layer
+    __call__() for child/gradient pass
+    forward()
+    backward()
+
+    fix stride problem
+    fix number of filters problem
+    fix padding problem
 
 
  open a folder named "trees" & rewrite neural engine based on tree
