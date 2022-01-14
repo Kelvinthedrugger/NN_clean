@@ -11,8 +11,19 @@ def plot_filters(weight):
   plt.show()
 
 
-class Flatten()
+# reshape the gradient when forward and backward
+class Flatten:
+  def __init__(self):
+    pass
 
+  def __call__(self):
+    pass
+
+  def forwards(self):
+    pass
+  
+  def backwards(self):
+    pass
 
 def debug():
   # five
