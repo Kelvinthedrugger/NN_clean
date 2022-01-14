@@ -35,11 +35,9 @@ Result:
 
     add LSTM -> add RL -> Real AutoML
 
-    add model.save() method: 70%
+    add model.save() method: 70%, should use similar method as pickle (I mean dict)
 
-    working on enabling usage on online notebook: done; see Progress &topo_on_cloud.py
-
-    implementation in language C: >> git checkout C
+    implementation in language C: >> git checkout C (not even a thing now)
 
 # Progress
 
@@ -47,6 +45,7 @@ Result:
 
     !git clone https://github.com/Kelvinthedrugger/NN_clean.git
 
+    Usage on online notebook: done; see topo_on_cloud.py
 
     # To see another architecture with a lot less memory, checkout ./tree_nn
 
