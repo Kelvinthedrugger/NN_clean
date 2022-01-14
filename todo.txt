@@ -2,9 +2,9 @@
 implement paper:
   super-convergence: cycle learning rate
 
+  perform experiments on implement dataset:
+    Mnist, Cifar's'
 
-perform experiments on implement dataset:
-  Mnist, Cifar's'
 
 for model.save() method
   1. go down very deep (from scratch)
@@ -13,13 +13,13 @@ for model.save() method
 
 Layers:
 
-  LSTM
+  LSTM: should be able to be implemented after autograd is done
 
-  Flatten Layer: so that we can make use of Conv layer
-                  , and the gradient flow problem
-                  would affect not just image inference
-                  , but also RL and so on
-  
+
+  fix the shape problem: height, width, color channel, batch_size
+   and then flatten layer
+   Conv -> Flatten -> CNN and a lot
+
   Conv layer
     __call__() for child/gradient pass
     forward()
@@ -29,9 +29,16 @@ Layers:
     fix number of filters problem
     fix padding problem
 
+  Flatten Layer: so that we can make use of Conv layer
+                  , and the gradient flow problem
+                  would affect not just image inference
+                  , but also RL and so on
+ 
 
- open a folder named "trees" & rewrite neural engine based on tree
-traversal:
+
+
+open a folder named "trees" & rewrite neural engine based on
+tree traversal:
  
  structure:
        root node: loss function(s)
