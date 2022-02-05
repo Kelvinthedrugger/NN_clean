@@ -20,6 +20,15 @@ y_train = x_train + 2
 # the neural net
 # target: learn (a,b).T, which happens to be 
 # , the params in this only layer of the model
+# workflow:
+#  feed x_train inside the model
+#  -> calculate the loss wrt y_train
+#  , so, the 1st input dim and last output dim should be 1 or batch_size
+# abstraction: randomly initialize the model
+# feed in the ds until the model learns the pattern (which is y=ax+b in this case)
+# point of deep learning is to NOT solve the problem analytically,
+# therefore, asking for (a,b) is usually not the problem we're dealing with
+# since the patterns in real world is just to complicated to be solved analytically
 layer = Linear(1,2)
 
 lossfn = Loss().mse
