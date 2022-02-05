@@ -1,3 +1,10 @@
+
+#### Branches
+  master: main branch with stable support
+  C: migrate all the code to C
+  apps: develop applications, tend to be unstable
+
+
 A much cleaner neural network from scratch using numpy, for practicing & mood changing
 
     python test.py
