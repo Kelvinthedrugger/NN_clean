@@ -6,7 +6,7 @@ sys.path.append(pardir)
 
 import nn.module as nn
 import numpy as np
-from nn.topo import Linear
+from nn.topo import Linear, ReLU
 
 # dataset: y = a*x + b, (a,b) = (1,2) in this case
 x_train = np.arange(0.1,10.1,0.1)
@@ -16,16 +16,27 @@ y_train = x_train + 2
 # from scratch
 layer1 = Linear(1,10)
 layer2 = Linear(10,1)
+act = ReLU()
+
+layer2(act(layer1))
 
 lossfn = nn.Loss().mse
+optim = nn.Optimizer(learning_rate=1e-4).SGD
+
+losses = []
+for _ in range(10):
+  out = layer2.forwards(x_train[_])
+  loss, grad = lossfn(y_train[_],out,supervised=False)
+  layer2.backwards(grad,optim)
+  losses.append(loss.mean())
+
+print(losses)
 
 # forward pass and backprop
 def fb(x,y,lr=1e-4):
   f1 = layer1.forwards(x) 
   f11 = np.maximum(f1,0)
   f2 = layer2.forwards(f11) 
-
-  #print(f2.shape)
 
   # backprop
   loss, grad = lossfn(y,f2,supervised=False)
@@ -41,12 +52,14 @@ def fb(x,y,lr=1e-4):
 
   return loss
 
-loss = []
-for _ in range(2000):
-  loss.append(fb(x_train[0],y_train[0],lr=1e-2))
+def raw():
+  loss = []
+  for _ in range(2000):
+    loss.append(fb(x_train[0],y_train[0],lr=1e-2))
 
-for i in range(9, len(loss),50):
-  print("epoch: %d, loss: %.6f" % (i, loss[i]))
+  for i in range(9, len(loss),50):
+    print("epoch: %d, loss: %.6f" % (i, loss[i]))
+
 
 #import matplotlib.pyplot as plt
 #plt.show()
