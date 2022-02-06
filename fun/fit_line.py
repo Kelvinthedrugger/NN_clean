@@ -64,7 +64,7 @@ def raw():
   loss = []
   for _ in range(2000):
     idx = np.random.randint(0,len(x_train[0]))
-    loss.append(fb(x_train[idx],y_train[idx],lr=1e-2))
+    loss.append(fb(x_train[idx],y_train[idx],lr=1e-1))
 
   for i in range(0, len(loss),100):
     print("epoch: %4d, loss: %.6f" % (i, loss[i]))
