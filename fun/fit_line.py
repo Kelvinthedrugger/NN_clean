@@ -18,29 +18,35 @@ layer1 = Linear(1,10)
 layer2 = Linear(10,1)
 act = ReLU()
 
-layer2(act(layer1))
 
 lossfn = nn.Loss().mse
 optim = nn.Optimizer(learning_rate=1e-4).SGD
 
-losses = []
-for _ in range(10):
-  out = layer2.forwards(x_train[_])
-  loss, grad = lossfn(y_train[_],out,supervised=False)
-  layer2.backwards(grad,optim)
-  losses.append(loss.mean())
+def cap():
+  # build model
+  layer2(act(layer1))
+  # train
+  losses = []
+  for _ in range(10):
+    out = layer2.forwards(x_train[_])
+    loss, grad = lossfn(y_train[_],out,supervised=False)
+    layer2.backwards(grad,optim)
+    losses.append(loss.mean())
 
-print(losses)
+  print(losses)
 
 # forward pass and backprop
 def fb(x,y,lr=1e-4):
+  # don't build model mofo
   f1 = layer1.forwards(x) 
   f11 = np.maximum(f1,0)
-  f2 = layer2.forwards(f11) 
-
+  #print(x.shape, f1.shape, layer1.weight.shape, f11.shape, layer2.weight.shape)
+  f2 = layer2.forwards(f11)
+  #print(f2.shape)
+  #return
   # backprop
   loss, grad = lossfn(y,f2,supervised=False)
-  df2 =  f2.T @ grad 
+  df2 =  f11.T @ grad 
   dfr = grad @ (layer2.weight.T)
   df11 = (dfr > 0.).astype(np.float32)
   df1 = x.T @ df11
@@ -53,14 +59,18 @@ def fb(x,y,lr=1e-4):
   return loss
 
 def raw():
+  # check model is not build
+  assert layer2.child is None
   loss = []
   for _ in range(2000):
-    loss.append(fb(x_train[0],y_train[0],lr=1e-2))
+    idx = np.random.randint(0,len(x_train[0]))
+    loss.append(fb(x_train[idx],y_train[idx],lr=1e-2))
 
-  for i in range(9, len(loss),50):
-    print("epoch: %d, loss: %.6f" % (i, loss[i]))
-
-
+  for i in range(0, len(loss),100):
+    print("epoch: %4d, loss: %.6f" % (i, loss[i]))
+  print("\nlast loss: %.6f" % loss[-1])
+if __name__ == "__main__":
+  raw()
 #import matplotlib.pyplot as plt
 #plt.show()
 # we'll pick arbitrary point on the line as test dataset. right now, we'll start proving the ability to fit an arbitrary ds now
