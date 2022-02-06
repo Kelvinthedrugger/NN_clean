@@ -18,7 +18,6 @@ layer1 = Linear(1,10)
 layer2 = Linear(10,1)
 act = ReLU()
 
-
 lossfn = nn.Loss().mse
 optim = nn.Optimizer(learning_rate=1e-4).SGD
 
@@ -34,6 +33,7 @@ def cap():
     losses.append(loss.mean())
 
   print(losses)
+
 
 # forward pass and backprop
 def fb(x,y,lr=1e-4):
