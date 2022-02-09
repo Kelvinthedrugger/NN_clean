@@ -12,16 +12,18 @@ act = ReLU()
 layer4 = Linear(128, 10)
 
 layer4(act(layer3))
-
-#lossfn = Loss().crossentropy
 lossfn = Loss().mse
-
-#optim = Optimizer(learning_rate=1e-4).SGD
 
 # attention! bs that's too small would lead to 0 encountering in runtime
 batch_size = 128 
 mnist_loss = {"loss": [], "val_loss": []}
 mnist_acc = {"acc": [], "val_acc": []}
+
+
+# lr finder: 
+#  create another empty list
+#  append the loss correspondingly
+#  return the learning rate as the loss differs the most
 
 lrs = [i*1e-7 for i in range(1,11)]
 #for epoch in range(1):
