@@ -49,6 +49,7 @@ Result:
 
     # To see another architecture with a lot less memory, checkout ./tree_nn
 
-    # for easier import, check out: https://github.com/Kelvinthedrugger/NeuralNetworkPackage 
+    
+for easier import, check out: https://github.com/Kelvinthedrugger/NeuralNetworkPackage 
 
 
