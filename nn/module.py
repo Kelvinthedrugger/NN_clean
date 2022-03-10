@@ -118,10 +118,14 @@ class Sequential:
                         f.write("\n\n")
             f.close()
 
+
 class Loss:
-    def mse(self, y, yhat, supervised=True, num_class=10):
+    def __init__(self, supervised=True):
+        self.supervised = supervised
+
+    def mse(self, y, yhat, num_class=10):
         """read num_class when supervised"""
-        if supervised:
+        if self.supervised:
             label = np.zeros((len(y), num_class), dtype=np.float32)
             label[range(label.shape[0]), y] = 1
             y = label
@@ -129,7 +133,7 @@ class Loss:
         diff = 2*np.subtract(yhat, y)/(y.shape[-1])
         return loss, diff
 
-    def crossentropy(self, y, yhat, supervised=True, num_class=10):
+    def crossentropy(self, y, yhat, num_class=10):
         """softmax + cross entropy loss"""
         label = np.zeros((len(y), num_class), dtype=np.float32)
         label[range(label.shape[0]), y] = 1
@@ -162,4 +166,3 @@ class Optimizer:
             tmp = layer.weight
             # current weight
             layer.weight -= self.learning_rate*mhat/(vhat**0.5+eps)
-
