@@ -17,7 +17,7 @@ To see how complex topo works on random & mnist dataset, checkout:
 
    ./nn/topo.py 
 
-Result:
+Benchmark:
 
  time spent: 1.7370 (2 epochs)
 
@@ -37,19 +37,12 @@ Result:
 
     add model.save() method: 70%, should use similar method as pickle (I mean dict)
 
-    implementation in language C: >> git checkout C (not even a thing now)
-
 # Progress
 
-    # NN_clean works on colab!
+```bash
+# NN_clean works on colab!
 
-    !git clone https://github.com/Kelvinthedrugger/NN_clean.git
-
-    Usage on online notebook: done; see topo_on_cloud.py
-
-    # To see another architecture with a lot less memory, checkout ./tree_nn
-
-    
-for easier import, check out: https://github.com/Kelvinthedrugger/NeuralNetworkPackage 
-
+!git clone https://github.com/Kelvinthedrugger/NN_clean.git
+```
+Example usage in notebook: done; see topo_on_cloud.py
 
