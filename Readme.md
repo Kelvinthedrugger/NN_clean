@@ -24,7 +24,7 @@ Benchmark:
  loss: 0.0667, val_loss: 0.0316
 
 
-# TODO
+#### TODO
 
     add activation (matters for numerical stability): done
 
@@ -37,7 +37,7 @@ Benchmark:
 
     add model.save() method: 70%, should use similar method as pickle (I mean dict)
 
-# Progress
+#### Progress
 
 ```bash
 # NN_clean works on colab!
